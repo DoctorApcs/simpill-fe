@@ -1,0 +1,27 @@
+.logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20rem;
+}
+
+.slogan {
+    font-size: 1.5rem;
+    color: #475569;
+    font-weight: 600;
+    padding-top: 1rem;
+}
+
+.title {
+    font-size: 3rem;
+    font-weight: 800;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+.intro-button {
+    padding: 16px 24px;
+    background-color: var(--primary);
+    color: var(--white);
+    border-radius: 16px;
+}
