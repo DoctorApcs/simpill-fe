@@ -1,40 +1,41 @@
 import classNames from 'classnames/bind';
 import style from './BodyMap.module.scss';
 
-import { useCallback, useMemo, useState } from 'react';
-import { getBodyPart } from './getBodyParts';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { getBodyArea, getBodyPart } from './getBodyParts';
 import BodyPart from './BodyPart';
 import BodyContainer from './BodyContainer';
 
 const cx = classNames.bind(style);
 function BodyMap() {
     const [clicked, setClicked] = useState(null);
+    const [clickedList, setClickedList] = useState([]);
     const [hovered, setHovered] = useState(null);
+    const [hoveredList, setHoveredList] = useState([]);
 
     const antBodyParts = useMemo(() => {
         return getBodyPart().filter(({ face }) => face === 'ant');
     });
 
+    const bodyAreas = useMemo(() => {
+        return getBodyArea();
+    });
     // const postBodyPart = useMemo(() => {
     //     return getBodyPart().filter(({ face }) => face === 'post');
     // });
 
     const clickedName = useMemo(() => {
-        if (!clicked) {
-            return '';
-        }
-        return getBodyPart().find((d) => clicked === d.id)?.name || '';
+        return getBodyPart().find((bodyPart) => clicked === bodyPart.id)?.name || '';
     }, [clicked]);
 
     const getFill = useCallback(
         (bodyPartId) => {
-            if (clicked === bodyPartId) return 'rgb(255, 59, 48)';
-            if (hovered === bodyPartId) return 'rgb(85, 85, 87)';
-            return 'rgb(75, 75, 77)';
+            if (clicked === bodyPartId || clickedList.includes(bodyPartId)) return '#F43F5E';
+            if (hovered === bodyPartId || hoveredList.includes(bodyPartId)) return '#E8ECF1';
+            return '#CBD5E1';
         },
-        [clicked, hovered],
+        [clicked, hovered, clickedList, hoveredList],
     );
-
     const handleClick = (id) => {
         setClicked(id);
     };
@@ -47,6 +48,30 @@ function BodyMap() {
     const handleMouseLeave = () => {
         if ('ontouchstart' in window) return;
         setHovered(null);
+    };
+
+    useEffect(() => {
+        const bodyPartIds = handleBodyArea(clicked);
+        setClickedList(bodyPartIds);
+    }, [clicked]);
+
+    useEffect(() => {
+        const bodyPartIds = handleBodyArea(hovered);
+        setHoveredList(bodyPartIds);
+    }, [hovered]);
+
+    const handleBodyArea = (searchedId) => {
+        for (let i = 0; i < bodyAreas.length; i++) {
+            if (bodyAreas[i].bodyPartIds.includes(searchedId)) return bodyAreas[i].bodyPartIds;
+
+            // const bodyPartLength = bodyAreas[i].bodyPartIds.length;
+            // for (let j = 0; j < bodyPartLength; j++) {
+            //     if (bodyAreas[i].bodyPartIds[j] === clicked) {
+            //         return bodyAreas[i].bodyPartIds;
+            //     }
+            // }
+        }
+        return [];
     };
 
     return (
@@ -97,5 +122,4 @@ const txt = {
     1: 'Front View',
     2: 'Back View',
 };
-
 export default BodyMap;

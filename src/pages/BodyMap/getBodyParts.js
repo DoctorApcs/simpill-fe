@@ -439,31 +439,31 @@ export const getBodyPart = () => [
     },
 ];
 
-const getBodyArea = () => [
+export const getBodyArea = () => [
+    {
+        id: 0,
+        name: 'Head and Neck',
+        bodyPartIds: [10, 19, 30],
+    },
     {
         id: 1,
-        name: 'Head and Neck',
-        bodyParts: [10, 19, 30],
+        name: 'Check and Back',
+        bodyPartIds: [0, 12, 20, 32],
     },
     {
         id: 2,
-        name: 'Check and Back',
-        bodyParts: [0, 12, 20, 32],
+        name: 'Arms and Hands',
+        bodyPartIds: [2, 3, 5, 6, 17, 18, 22, 23, 25, 26, 37, 38],
     },
     {
         id: 3,
-        name: 'Arms and Hands',
-        bodyParts: [2, 3, 5, 6, 17, 18, 22, 23, 25, 26, 35, 37, 38],
+        name: 'Abdomen and Pelvis',
+        bodyPartIds: [1, 4, 9, 21, 24, 29],
     },
     {
         id: 4,
-        name: 'Abdomen and Pelvis',
-        bodyParts: [1, 4, 9, 21, 24, 29],
-    },
-    {
-        id: 5,
         name: 'Legs and Feets',
-        bodyParts: [7, 8, 11, 13, 14, 15, 16, 27, 28, 31, 33, 34, 35, 36],
+        bodyPartIds: [7, 8, 11, 13, 14, 15, 16, 27, 28, 31, 33, 34, 35, 36],
     },
 ];
 
