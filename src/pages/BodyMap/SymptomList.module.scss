@@ -1,0 +1,21 @@
+#container {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    height: 60vh;
+}
+
+.symptom-list {
+    background-color: transparent;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 8px;
+    position: relative;
+}
+
+.btn .btn-primary {
+    overflow: hidden;
+    padding: 12px;
+}

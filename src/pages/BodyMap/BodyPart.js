@@ -1,4 +1,6 @@
-function BodyPart({ id, d, fill, onClick, onMouseEnter, onMouseLeave }) {
+import { forwardRef } from 'react';
+
+const BodyPart = forwardRef(({ id, d, fill, onClick, onMouseEnter, onMouseLeave, ...props }, ref) => {
     const handleClick = () => {
         onClick(id);
     };
@@ -14,9 +16,11 @@ function BodyPart({ id, d, fill, onClick, onMouseEnter, onMouseLeave }) {
         <path
             d={d}
             id={id}
+            ref={ref}
             onClick={handleClick}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
+            {...props}
             style={Object.assign(
                 {
                     WebkitTapHighlightColor: 'transparent',
@@ -26,6 +30,6 @@ function BodyPart({ id, d, fill, onClick, onMouseEnter, onMouseLeave }) {
             )}
         />
     );
-}
+});
 
 export default BodyPart;
