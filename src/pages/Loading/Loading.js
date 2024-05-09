@@ -8,14 +8,18 @@ import Loaded from './Loaded';
 const cx = classNames.bind(style);
 function Loading() {
     const [loading, setLoading] = useState(true);
+    // Get active symptoms from redux store
     const activeSymptoms = useSelector((state) => state.activeSymptoms);
     console.log(activeSymptoms);
+
+    // Simulate loading time
     useEffect(() => {
         setTimeout(() => {
             setLoading(false);
         }, 3000);
     }, []);
 
+    // Change background color based on loading state
     if (loading) {
         document.body.style.backgroundColor = 'rgb(204, 251, 241)';
     } else {

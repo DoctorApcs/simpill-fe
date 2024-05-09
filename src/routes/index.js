@@ -2,14 +2,14 @@
 import BodyMap from '~/pages/BodyMap';
 import Home from '~/pages/Home';
 import Loading from '~/pages/Loading';
-import Subpplements from '~/pages/Subpplements';
+import Supplements from '~/pages/Subpplements';
 
 // Public Routes
 const publicRoutes = [
     { path: '/', component: Home },
     { path: '/bodymap', component: BodyMap },
     { path: '/loading', component: Loading },
-    { path: '/subpplements', component: Subpplements },
+    { path: '/supplements', component: Supplements },
 ];
 
 // Private Routes

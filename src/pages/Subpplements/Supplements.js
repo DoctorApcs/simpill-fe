@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import style from './Subpplements.module.scss';
+import style from './Supplements.module.scss';
 
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,11 +16,15 @@ const fakeAPIVitamins = Array.from({ length: 5 }, (_, i) => ({
     name: `Vitamin ${i + 1}`,
 }));
 const cx = classNames.bind(style);
-function Subpplements() {
+function Supplements() {
+    // Get active symptoms from redux store
     const activeSymptoms = useSelector((state) => state.activeSymptoms);
+
+    // Get body area based on active symptoms
     const bodyArea = useMemo(() => {
         return getBodyArea().find((area) => activeSymptoms.area === area.id);
     }, [activeSymptoms.area]);
+
     return (
         <Container className={cx('container')}>
             <NavLink to={'/bodymap'}>
@@ -72,7 +76,7 @@ function Subpplements() {
                                 borderRadius: '24px',
                                 color: '#000',
                                 fontSize: '18px',
-                                height: '60px',
+                                height: '100px',
                                 fontWeight: 800,
                                 display: 'flex',
                                 justifyContent: 'space-between',
@@ -84,6 +88,7 @@ function Subpplements() {
                                 style={{
                                     display: 'flex',
                                     flexDirection: 'column',
+                                    gap: '12px',
                                     alignItems: 'flex-start',
                                     width: '100%',
                                 }}
@@ -100,4 +105,4 @@ function Subpplements() {
     );
 }
 
-export default Subpplements;
+export default Supplements;

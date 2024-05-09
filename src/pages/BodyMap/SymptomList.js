@@ -14,14 +14,13 @@ const fakeAPISymtomList = Array.from({ length: 10 }, (_, i) => ({
     name: `Symptom ${i + 1}`,
 }));
 
-//Hande useRef for symptom list
-
 const cx = classNames.bind(style);
 const SymptomList = forwardRef(({ area, show, handleClose, className }, ref) => {
     const [activeSymptoms, setActiveSymptoms] = useState({ area: area.id, active: [] });
     const dispatch = useDispatch();
     const buttonGroupRef = useRef(null);
 
+    // Handle active symptoms and scroll to the last active symptom
     const handleActiveSymptoms = (activeSymptomIds) => {
         const activeSymtomsArea = { area: area.id, active: activeSymptomIds };
         dispatch({ type: 'SET_ACTIVE_SYMPTOMS', payload: activeSymtomsArea });

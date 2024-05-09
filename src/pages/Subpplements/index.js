@@ -1,1 +1,1 @@
-export { default } from './Subpplements';
+export { default } from './Supplements';
