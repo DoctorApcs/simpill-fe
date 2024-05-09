@@ -10,13 +10,18 @@ import SymptomList from './SymptomList';
 
 const cx = classNames.bind(style);
 function BodyMap() {
+    // state for clicked and hovered body part
     const [clicked, setClicked] = useState(null);
     const [hovered, setHovered] = useState(null);
     const [areaIdx, setAreaIdx] = useState(-1);
     const [areaHoveredIdx, setAreaHoveredIdx] = useState(-1);
+    //state for showing symptom list
     const [showSymptomList, setShowSymptomList] = useState(false);
+    //get ref for symptom list and body area buttons
     const symptomListRef = useRef(null);
+    const bodyAreaButtonsRef = useRef(null);
 
+    // Get body parts and areas
     const antBodyParts = useMemo(() => {
         return getBodyPart().filter(({ face }) => face === 'ant');
     }, []);
@@ -29,6 +34,7 @@ function BodyMap() {
     //     return getBodyPart().filter(({ face }) => face === 'post');
     // });
 
+    // Change color of body part when clicked and hovered
     const getFill = useCallback(
         (bodyPartId) => {
             if (areaIdx !== -1) {
@@ -42,6 +48,7 @@ function BodyMap() {
         [areaIdx, areaHoveredIdx],
     );
 
+    // Handle click and hover events
     const handleClick = (id) => {
         setClicked(id);
     };
@@ -55,9 +62,14 @@ function BodyMap() {
         if ('ontouchstart' in window) return;
         setHovered(null);
     };
+
+    // Set area index when clicked or hovered
     useEffect(() => {
         const areaIndex = findArea(clicked);
         setAreaIdx(areaIndex);
+        bodyAreasButtonRef.current.children[areaIndex]?.scrollIntoView({
+            behaivor: 'smooth',
+        });
     }, [clicked]);
 
     useEffect(() => {
@@ -65,6 +77,7 @@ function BodyMap() {
         setAreaHoveredIdx(areaHoveredIndex);
     }, [hovered]);
 
+    // Find area index by body part id
     const findArea = (searchedId) => {
         for (let i = 0; i < bodyAreas.length; i++) {
             if (bodyAreas[i].bodyPartIds.includes(searchedId)) {
@@ -78,9 +91,10 @@ function BodyMap() {
         setShowSymptomList(true);
     }, [areaIdx]);
 
+    // Close symptom list when clicked outside
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (symptomListRef.current && !symptomListRef.current.dialog.contains(event.target)) {
+            if (symptomListRef.current && !symptomListRef.current.dialog?.contains(event.target)) {
                 setAreaIdx(-1);
             }
         };
@@ -128,7 +142,7 @@ function BodyMap() {
                     </BodyContainer>
                 </div> */}
             </div>
-            <div className={cx('button-row')}>
+            <div className={cx('button-row')} ref={bodyAreaButtonsRef}>
                 {bodyAreas.map((area, index) => (
                     <Button
                         key={index}
