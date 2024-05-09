@@ -1,41 +1,47 @@
 import classNames from 'classnames/bind';
 import style from './BodyMap.module.scss';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { getBodyArea, getBodyPart } from './getBodyParts';
 import BodyPart from './BodyPart';
 import BodyContainer from './BodyContainer';
+import { Button, Container } from 'react-bootstrap';
+import SymptomList from './SymptomList';
 
 const cx = classNames.bind(style);
 function BodyMap() {
     const [clicked, setClicked] = useState(null);
-    const [clickedList, setClickedList] = useState([]);
     const [hovered, setHovered] = useState(null);
-    const [hoveredList, setHoveredList] = useState([]);
+    const [areaIdx, setAreaIdx] = useState(-1);
+    const [areaHoveredIdx, setAreaHoveredIdx] = useState(-1);
+    const [showSymptomList, setShowSymptomList] = useState(false);
+    const symptomListRef = useRef(null);
 
     const antBodyParts = useMemo(() => {
         return getBodyPart().filter(({ face }) => face === 'ant');
-    });
+    }, []);
 
     const bodyAreas = useMemo(() => {
         return getBodyArea();
-    });
+    }, []);
+
     // const postBodyPart = useMemo(() => {
     //     return getBodyPart().filter(({ face }) => face === 'post');
     // });
 
-    const clickedName = useMemo(() => {
-        return getBodyPart().find((bodyPart) => clicked === bodyPart.id)?.name || '';
-    }, [clicked]);
-
     const getFill = useCallback(
         (bodyPartId) => {
-            if (clicked === bodyPartId || clickedList.includes(bodyPartId)) return '#F43F5E';
-            if (hovered === bodyPartId || hoveredList.includes(bodyPartId)) return '#E8ECF1';
+            if (areaIdx !== -1) {
+                if (bodyAreas[areaIdx].bodyPartIds.includes(bodyPartId)) return '#F44F5E';
+            }
+            if (areaHoveredIdx !== -1) {
+                if (bodyAreas[areaHoveredIdx].bodyPartIds.includes(bodyPartId)) return '#E8ECF1';
+            }
             return '#CBD5E1';
         },
-        [clicked, hovered, clickedList, hoveredList],
+        [areaIdx, areaHoveredIdx],
     );
+
     const handleClick = (id) => {
         setClicked(id);
     };
@@ -49,50 +55,62 @@ function BodyMap() {
         if ('ontouchstart' in window) return;
         setHovered(null);
     };
-
     useEffect(() => {
-        const bodyPartIds = handleBodyArea(clicked);
-        setClickedList(bodyPartIds);
+        const areaIndex = findArea(clicked);
+        setAreaIdx(areaIndex);
     }, [clicked]);
 
     useEffect(() => {
-        const bodyPartIds = handleBodyArea(hovered);
-        setHoveredList(bodyPartIds);
+        const areaHoveredIndex = findArea(hovered);
+        setAreaHoveredIdx(areaHoveredIndex);
     }, [hovered]);
 
-    const handleBodyArea = (searchedId) => {
+    const findArea = (searchedId) => {
         for (let i = 0; i < bodyAreas.length; i++) {
-            if (bodyAreas[i].bodyPartIds.includes(searchedId)) return bodyAreas[i].bodyPartIds;
-
-            // const bodyPartLength = bodyAreas[i].bodyPartIds.length;
-            // for (let j = 0; j < bodyPartLength; j++) {
-            //     if (bodyAreas[i].bodyPartIds[j] === clicked) {
-            //         return bodyAreas[i].bodyPartIds;
-            //     }
-            // }
+            if (bodyAreas[i].bodyPartIds.includes(searchedId)) {
+                return i;
+            }
         }
-        return [];
+        return -1;
     };
 
+    useEffect(() => {
+        setShowSymptomList(true);
+    }, [areaIdx]);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (symptomListRef.current && !symptomListRef.current.dialog.contains(event.target)) {
+                setAreaIdx(-1);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return (
-        <>
-            <div className={style.bodies}>
-                <div>
-                    <p>{txt[1]}</p>
-                    <BodyContainer>
-                        {antBodyParts.map((bodyPart, index) => (
-                            <BodyPart
-                                key={index}
-                                id={bodyPart.id}
-                                d={bodyPart.d}
-                                fill={getFill(bodyPart.id)}
-                                onClick={handleClick}
-                                onMouseEnter={handleMouseEnter}
-                                onMouseLeave={handleMouseLeave}
-                            />
-                        ))}
-                    </BodyContainer>
-                </div>
+        <Container
+            className="d-inline-flex flex-column justify-content-center align-item-center"
+            style={{ gap: '20px' }}
+        >
+            <h1 className={cx('header')}>Symptom Checker</h1>
+            <div className={cx('body')}>
+                <BodyContainer>
+                    {antBodyParts.map((bodyPart, index) => (
+                        <BodyPart
+                            key={index}
+                            id={bodyPart.id}
+                            d={bodyPart.d}
+                            fill={getFill(bodyPart.id)}
+                            onClick={handleClick}
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
+                        />
+                    ))}
+                </BodyContainer>
                 {/* <div>
                     <p>{txt[2]}</p>
                     <BodyContainer>
@@ -106,20 +124,34 @@ function BodyMap() {
                                 onMouseEnter={handleMouseEnter}
                                 onMouseLeave={handleMouseLeave}
                             />
-                        ))}
+                       ))}
                     </BodyContainer>
                 </div> */}
             </div>
-            <div className={style.header}>
-                <p>{clickedName || txt[0]}</p>
+            <div className={cx('button-row')}>
+                {bodyAreas.map((area, index) => (
+                    <Button
+                        key={index}
+                        bsPrefix={cx('body-part-button')}
+                        onClick={() => setAreaIdx(index)}
+                        style={index === areaIdx ? { color: '#fff', backgroundColor: '#14b8a6' } : {}}
+                    >
+                        {area.name}
+                    </Button>
+                ))}
             </div>
-        </>
+            {areaIdx !== -1 ? (
+                <SymptomList
+                    ref={symptomListRef}
+                    area={bodyAreas[areaIdx]}
+                    show={showSymptomList}
+                    handleClose={() => setShowSymptomList(false)}
+                />
+            ) : (
+                ''
+            )}
+        </Container>
     );
 }
 
-const txt = {
-    0: 'Click on the body!',
-    1: 'Front View',
-    2: 'Back View',
-};
 export default BodyMap;

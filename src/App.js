@@ -3,6 +3,8 @@ import { publicRoutes } from './routes';
 import { Fragment } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss';
+import { Provider } from 'react-redux';
+import store from './store';
 
 function App() {
     return (
@@ -19,7 +21,9 @@ function App() {
                                 path={route.path}
                                 element={
                                     <Layout>
-                                        <Page />
+                                        <Provider store={store}>
+                                            <Page />
+                                        </Provider>
                                     </Layout>
                                 }
                             />
