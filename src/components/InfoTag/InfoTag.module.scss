@@ -1,0 +1,17 @@
+.container {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+}
+.title {
+    font-size: 20px;
+    font-weight: 800;
+}
+.content {
+    padding-left: 20px;
+    color: #627067;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 28px;
+}

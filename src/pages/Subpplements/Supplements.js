@@ -68,36 +68,38 @@ function Supplements() {
                         <h5 style={{ fontWeight: 800, fontSize: '16px' }}>All Results</h5>
                     </div>
                     {fakeAPIVitamins.map((vitamin, index) => (
-                        <Button
-                            key={index}
-                            style={{
-                                backgroundColor: '#f1f5f9',
-                                borderColor: '#f1f5f9',
-                                borderRadius: '24px',
-                                color: '#000',
-                                fontSize: '18px',
-                                height: '100px',
-                                fontWeight: 800,
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                padding: '0 24px',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <div
+                        <NavLink to={`/supplements/${vitamin.name}`} key={index}>
+                            <Button
+                                key={index}
                                 style={{
                                     display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '12px',
-                                    alignItems: 'flex-start',
+                                    alignItems: 'center',
                                     width: '100%',
+                                    height: '100px',
+                                    padding: '0 24px',
+                                    backgroundColor: '#f1f5f9',
+                                    borderColor: '#f1f5f9',
+                                    borderRadius: '24px',
+                                    color: '#000',
+                                    fontSize: '18px',
+                                    fontWeight: 800,
                                 }}
                             >
-                                {vitamin.name}
-                                <ProgressBar now={60} style={{ width: '100%' }} />
-                            </div>
-                            <FontAwesomeIcon icon={faAngleRight} style={{ float: 'right' }} />
-                        </Button>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        width: '100%',
+                                        flexDirection: 'column',
+                                        gap: '12px',
+                                        alignItems: 'flex-start',
+                                    }}
+                                >
+                                    {vitamin.name}
+                                    <ProgressBar now={60} style={{ width: '100%' }} />
+                                </div>
+                                <FontAwesomeIcon icon={faAngleRight} style={{ float: 'right' }} />
+                            </Button>
+                        </NavLink>
                     ))}
                 </div>
             </div>
