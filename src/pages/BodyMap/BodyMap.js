@@ -106,10 +106,7 @@ function BodyMap() {
     }, []);
 
     return (
-        <Container
-            className="d-inline-flex flex-column justify-content-center align-item-center"
-            style={{ gap: '20px' }}
-        >
+        <Container className="d-inline-flex flex-column justify-content-center" style={{ gap: '20px' }}>
             <h1 className={cx('header')}>Symptom Checker</h1>
             <div className={cx('body')}>
                 <BodyContainer>
@@ -148,7 +145,11 @@ function BodyMap() {
                         key={index}
                         bsPrefix={cx('body-part-button')}
                         onClick={() => setAreaIdx(index)}
-                        style={index === areaIdx ? { color: '#fff', backgroundColor: '#14b8a6' } : {}}
+                        style={
+                            index === areaIdx
+                                ? { color: '#fff', backgroundColor: '#14b8a6' }
+                                : { color: '#000', backgroundColor: '#f1f5f9' }
+                        }
                     >
                         {area.name}
                     </Button>
