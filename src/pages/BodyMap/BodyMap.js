@@ -67,7 +67,7 @@ function BodyMap() {
     useEffect(() => {
         const areaIndex = findArea(clicked);
         setAreaIdx(areaIndex);
-        bodyAreasButtonRef.current.children[areaIndex]?.scrollIntoView({
+        bodyAreaButtonsRef.current.children[areaIndex]?.scrollIntoView({
             behaivor: 'smooth',
         });
     }, [clicked]);
