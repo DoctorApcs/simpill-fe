@@ -3,6 +3,7 @@ import style from './FruitsDrugs.module.scss';
 
 import { Container } from 'react-bootstrap';
 import ProductCard from '~/components/ProductCard';
+import { NavLink } from 'react-router-dom';
 
 const fakeProduct = [
     {
@@ -51,7 +52,9 @@ function FruitsDrugs() {
                 <h1 style={{ fontWeight: 800 }}>Drugs Recommended For You</h1>
                 <div className={cx('product-list')}>
                     {fakeProduct.map((product, index) => (
-                        <ProductCard key={index} product={product} />
+                        <NavLink to={`/${product.name}`} style={{ textDecoration: 'none', color: 'black' }}>
+                            <ProductCard key={index} product={product} />
+                        </NavLink>
                     ))}
                 </div>
             </div>

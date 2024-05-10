@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import style from './Supplements.module.scss';
+import style from './SupplementList.module.scss';
 
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,7 +16,7 @@ const fakeAPIVitamins = Array.from({ length: 5 }, (_, i) => ({
     name: `Vitamin ${i + 1}`,
 }));
 const cx = classNames.bind(style);
-function Supplements() {
+function SupplementList() {
     // Get active symptoms from redux store
     const activeSymptoms = useSelector((state) => state.activeSymptoms);
 
@@ -107,4 +107,4 @@ function Supplements() {
     );
 }
 
-export default Supplements;
+export default SupplementList;
