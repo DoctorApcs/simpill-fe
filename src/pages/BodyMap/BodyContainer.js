@@ -11,7 +11,7 @@ function BodyContainer({ children }) {
                 padding: '30px',
             }}
         >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 375.42 832.97" width="375.42" height="832.97">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 375.42 832.97" width="280">
                 <g>{children}</g>
             </svg>
         </div>
