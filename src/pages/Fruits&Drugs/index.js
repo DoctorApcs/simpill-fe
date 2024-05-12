@@ -1,1 +1,1 @@
-export { default } from './FruitsDrugs';
+export { default } from './FruitDrugList';

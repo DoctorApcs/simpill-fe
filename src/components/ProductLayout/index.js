@@ -1,5 +1,1 @@
-function ProdcutLayout() {
-    return;
-}
-
-export default ProdcutLayout;
+export { default } from './ProductLayout.js';

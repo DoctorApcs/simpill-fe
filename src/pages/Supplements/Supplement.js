@@ -1,11 +1,12 @@
 import classNames from 'classnames/bind';
 import style from './Supplement.module.scss';
 
-import { Container, Nav, Tab, TabPane } from 'react-bootstrap';
+import { Nav, Tab, TabPane } from 'react-bootstrap';
 import images from '~/assets/images';
 import InfoTag from '~/components/InfoTag';
 import { useState } from 'react';
 import FruitsDrugs from '~/pages/Fruits&Drugs';
+import ProductLayout from '~/components/ProductLayout';
 
 const supplement = {
     name: 'VITAMIN A',
@@ -40,13 +41,8 @@ function Supplement() {
     };
 
     return (
-        <Container className={'d-flex flex-column'} style={{ gap: '32px' }}>
+        <ProductLayout productImg={images.supplement} product={supplement} isShowTitle={true}>
             <Tab.Container activeKey={activeId} onSelect={handleSelect}>
-                <div className={cx('thumbnail')}>
-                    <img className={cx('thumbnail-img')} src={images.supplement} alt="supplement" />
-                    <div className={cx('shadow')}></div>
-                    <h1 className={cx('title')}>{supplement.name}</h1>
-                </div>
                 <Nav variant="pills" className="d-flex justify-content-center" style={{ heigth: '60px' }}>
                     <div className={cx('switch-button')}>
                         {switchButton.map((item, index) => (
@@ -81,7 +77,7 @@ function Supplement() {
                     </TabPane>
                 </Tab.Content>
             </Tab.Container>
-        </Container>
+        </ProductLayout>
     );
 }
 
