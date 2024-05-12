@@ -3,11 +3,11 @@ import style from './SupplementList.module.scss';
 
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Container, Image, ProgressBar } from 'react-bootstrap';
+import { Button, Container, Image } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useMemo } from 'react';
-import { getBodyArea } from '../BodyMap/getBodyParts';
+import { getBodyAreas } from '~/handler';
 import images from '~/assets/images';
 
 // Fake api data vitamins
@@ -22,7 +22,7 @@ function SupplementList() {
 
     // Get body area based on active symptoms
     const bodyArea = useMemo(() => {
-        return getBodyArea().find((area) => activeSymptoms.area === area.id);
+        return getBodyAreas().find((area) => activeSymptoms.area === area.id);
     }, [activeSymptoms.area]);
 
     return (
@@ -42,8 +42,8 @@ function SupplementList() {
                 </Button>
             </NavLink>
             <div>
-                <h1 style={{ fontWeight: 800, fontSize: '28px' }}>Supplements: What You Really Need</h1>
-                <p>Here are the conditions that match your selected symptoms</p>
+                <h1 style={{ fontWeight: 800, fontSize: '28px' }}>Recommended Supplements</h1>
+                <p>Here are the recommended vitamins and supplements to use for your symptoms</p>
             </div>
             <div className={cx('active-symptoms')}>
                 <div className={cx('symptom-logo')}>
@@ -95,7 +95,6 @@ function SupplementList() {
                                     }}
                                 >
                                     {vitamin.name}
-                                    <ProgressBar now={60} style={{ width: '100%' }} />
                                 </div>
                                 <FontAwesomeIcon icon={faAngleRight} style={{ float: 'right' }} />
                             </Button>

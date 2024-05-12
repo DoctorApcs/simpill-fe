@@ -1,7 +1,6 @@
 // Pages
 import BodyMap from '~/pages/BodyMap';
 import Home from '~/pages/Home';
-import Loading from '~/pages/Loading';
 import SupplementList from '~/pages/Supplements/SupplementList';
 import Supplement from '~/pages/Supplements/Supplement';
 import FruitDrug from '~/pages/Fruits&Drugs/FruitDrug';
@@ -10,7 +9,6 @@ import FruitDrug from '~/pages/Fruits&Drugs/FruitDrug';
 const publicRoutes = [
     { path: '/', component: Home },
     { path: '/bodymap', component: BodyMap },
-    { path: '/loading', component: Loading },
     { path: '/supplements', component: SupplementList },
     { path: '/supplements/:name', component: Supplement },
     { path: '/drug/:name', component: FruitDrug },

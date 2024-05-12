@@ -5,7 +5,7 @@ import { Nav, Tab, TabPane } from 'react-bootstrap';
 import images from '~/assets/images';
 import InfoTag from '~/components/InfoTag';
 import { useState } from 'react';
-import FruitsDrugs from '~/pages/Fruits&Drugs';
+import FruitDrugList from '~/pages/Fruits&Drugs/FruitDrugList';
 import ProductLayout from '~/components/ProductLayout';
 
 const supplement = {
@@ -36,13 +36,13 @@ const switchButton = [
 function Supplement() {
     const [activeId, setActiveId] = useState(0);
 
-    const handleSelect = () => {
-        setActiveId((prev) => 1 - prev);
+    const handleSelect = (key) => {
+        setActiveId(Number(key));
     };
 
     return (
         <ProductLayout productImg={images.supplement} product={supplement} isShowTitle={true}>
-            <Tab.Container activeKey={activeId} onSelect={handleSelect}>
+            <Tab.Container activeKey={activeId} onSelect={(k) => handleSelect(k)}>
                 <Nav variant="pills" className="d-flex justify-content-center" style={{ heigth: '60px' }}>
                     <div className={cx('switch-button')}>
                         {switchButton.map((item, index) => (
@@ -73,7 +73,7 @@ function Supplement() {
                         </div>
                     </Tab.Pane>
                     <TabPane eventKey={1}>
-                        <FruitsDrugs />
+                        <FruitDrugList />
                     </TabPane>
                 </Tab.Content>
             </Tab.Container>

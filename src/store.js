@@ -1,15 +1,15 @@
 import { createStore } from 'redux';
 
 const initialState = {
-    activeSymptoms: { area: null, activeSymptoms: [] },
+    activeSymptomsList: { area: null, activeSymptomsList: [] },
 };
 //reducer
 function reducer(state = initialState, action) {
     switch (action.type) {
-        case 'SET_ACTIVE_SYMPTOMS':
+        case 'SET_ACTIVE_SYMPTOMS_LIST':
             return {
                 ...state,
-                activeSymptoms: action.payload,
+                activeSymptomsList: action.payload,
             };
         default:
             return state;

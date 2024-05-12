@@ -2,11 +2,15 @@ import classNames from 'classnames/bind';
 import style from './BodyMap.module.scss';
 
 import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
-import { getBodyArea, getBodyPart } from './getBodyParts';
 import BodyPart from './BodyPart';
 import BodyContainer from './BodyContainer';
 import { Button, Container } from 'react-bootstrap';
 import SymptomList from './SymptomList';
+import Loading from '../Loading';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { useSelector } from 'react-redux';
+import { getBodyAreas, getBodyParts } from '~/handler';
 
 const cx = classNames.bind(style);
 function BodyMap() {
@@ -17,24 +21,23 @@ function BodyMap() {
     const [areaHoveredIdx, setAreaHoveredIdx] = useState(-1);
     //state for showing symptom list
     const [showSymptomList, setShowSymptomList] = useState(false);
+    //state for loading
+    const [isLoading, setLoading] = useState(false);
     //get ref for symptom list and body area buttons
     const symptomListRef = useRef(null);
     const bodyAreaButtonsRef = useRef(null);
 
+    // state for active symptoms list
+    const [selectedSymptoms, setSelectedSymptoms] = useState([]);
+
     // Get body parts and areas
     const antBodyParts = useMemo(() => {
-        return getBodyPart().filter(({ face }) => face === 'ant');
+        return getBodyParts().filter(({ face }) => face === 'ant');
     }, []);
-
     const bodyAreas = useMemo(() => {
-        return getBodyArea();
+        return getBodyAreas();
     }, []);
 
-    // const postBodyPart = useMemo(() => {
-    //     return getBodyPart().filter(({ face }) => face === 'post');
-    // });
-
-    // Change color of body part when clicked and hovered
     const getFill = useCallback(
         (bodyPartId) => {
             if (areaIdx !== -1) {
@@ -45,7 +48,7 @@ function BodyMap() {
             }
             return '#CBD5E1';
         },
-        [areaIdx, areaHoveredIdx],
+        [bodyAreas, areaIdx, areaHoveredIdx],
     );
 
     // Handle click and hover events
@@ -105,6 +108,8 @@ function BodyMap() {
         };
     }, []);
 
+    if (isLoading) return <Loading />;
+
     return (
         <Container className="d-inline-flex flex-column justify-content-center" style={{ gap: '20px' }}>
             <h1 className={cx('header')}>Symptom Checker</h1>
@@ -141,18 +146,20 @@ function BodyMap() {
             </div>
             <div className={cx('button-row')} ref={bodyAreaButtonsRef}>
                 {bodyAreas.map((area, index) => (
-                    <Button
-                        key={index}
-                        bsPrefix={cx('body-part-button')}
-                        onClick={() => setAreaIdx(index)}
-                        style={
-                            index === areaIdx
-                                ? { color: '#fff', backgroundColor: '#14b8a6' }
-                                : { color: '#000', backgroundColor: '#f1f5f9' }
-                        }
-                    >
-                        {area.name}
-                    </Button>
+                    <label key={index} style={{ display: 'flex' }}>
+                        <Button
+                            key={index}
+                            bsPrefix={cx('body-part-button')}
+                            onClick={() => setAreaIdx(index)}
+                            style={
+                                index === areaIdx
+                                    ? { color: '#fff', backgroundColor: '#14b8a6' }
+                                    : { color: '#000', backgroundColor: '#f1f5f9' }
+                            }
+                        >
+                            {area.name}
+                        </Button>
+                    </label>
                 ))}
             </div>
             {areaIdx !== -1 ? (
@@ -165,6 +172,20 @@ function BodyMap() {
             ) : (
                 ''
             )}
+            <Button
+                onClick={() => setLoading(true)}
+                style={{
+                    margin: '8px',
+                    padding: '16px 28px',
+                    borderColor: '#1e293b',
+                    fontWeight: 700,
+                    fontSize: '16px',
+                    backgroundColor: '#1e293b',
+                }}
+            >
+                Apply
+                <FontAwesomeIcon style={{ paddingLeft: '10px' }} icon={faCheck} />
+            </Button>
         </Container>
     );
 }
