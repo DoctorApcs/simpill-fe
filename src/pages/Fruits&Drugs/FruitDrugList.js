@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import style from './FruitsDrugs.module.scss';
+import style from './FruitDrugList.module.scss';
 
 import { Container } from 'react-bootstrap';
 import ProductCard from '~/components/ProductCard';
@@ -45,15 +45,19 @@ const fakeProduct = [
 ];
 
 const cx = classNames.bind(style);
-function FruitsDrugs() {
+function FruitDrugList() {
     return (
         <Container className="d-flex flex-column" style={{ gap: '16px' }}>
             <div>
                 <h1 style={{ fontWeight: 800 }}>Drugs Recommended For You</h1>
                 <div className={cx('product-list')}>
                     {fakeProduct.map((product, index) => (
-                        <NavLink to={`/${product.name}`} style={{ textDecoration: 'none', color: 'black' }}>
-                            <ProductCard key={index} product={product} />
+                        <NavLink
+                            key={index}
+                            to={`/drug/${product.name}`}
+                            style={{ textDecoration: 'none', color: 'black' }}
+                        >
+                            <ProductCard product={product} />
                         </NavLink>
                     ))}
                 </div>
@@ -70,4 +74,4 @@ function FruitsDrugs() {
     );
 }
 
-export default FruitsDrugs;
+export default FruitDrugList;

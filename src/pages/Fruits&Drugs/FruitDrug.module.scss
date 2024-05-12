@@ -1,0 +1,22 @@
+.detail {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+}
+.detail-info {
+    color: #5b5b5b;
+    font-size: 14px;
+}
+.product-unit {
+    border: var(--primary) 2px solid;
+    color: var(--black);
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 50px;
+}
+.show-more-button {
+    background: none;
+    color: var(--primary);
+    border: none;
+}
