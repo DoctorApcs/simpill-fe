@@ -45,9 +45,11 @@ function BodyMap() {
         }
         setAreaIdxList(selectedAreaIdxList);
     }, [selectedSymptoms, areaIdx]);
-
     const getFill = useCallback(
         (bodyPartId) => {
+            if (areaIdx !== -1) {
+                if (bodyAreas[areaIdx].bodyPartIds.includes(bodyPartId)) return '#F44F5E';
+            }
             for (const areaId of areaIdxList) {
                 if (bodyAreas[areaId].bodyPartIds.includes(bodyPartId)) return '#F44F5E';
             }
@@ -56,7 +58,7 @@ function BodyMap() {
             }
             return '#CBD5E1';
         },
-        [bodyAreas, areaHoveredIdx, areaIdxList],
+        [bodyAreas, areaHoveredIdx, areaIdxList, areaIdx],
     );
 
     // Handle click and hover events
@@ -78,7 +80,6 @@ function BodyMap() {
     // Set area index when clicked or hovered
     useEffect(() => {
         const areaIndex = findAreaIdByBodyPartId(clicked);
-        // console.log(areaIndex);
         setAreaIdx(areaIndex);
         bodyAreaButtonsRef.current.children[areaIndex]?.scrollIntoView({
             behaivor: 'smooth',
@@ -176,8 +177,10 @@ function BodyMap() {
                 <SymptomList
                     ref={symptomListRef}
                     areaId={areaIdx}
-                    areaGroup={findAreaGroupByAreaId(areaIdx)}
                     showSymptomList={showSymptomList}
+                    areaGroup={findAreaGroupByAreaId(areaIdx)}
+                    setClicked={setClicked}
+                    setAreaIdx={setAreaIdx}
                     selectedSymptoms={selectedSymptoms}
                     setSelectedSymptoms={setSelectedSymptoms}
                     setShowSymptomList={setShowSymptomList}
