@@ -10,7 +10,17 @@ import { findSymptomListByAreaId, findAreaGroupByAreaGroupId, findNameByAreaId }
 const cx = classNames.bind(style);
 const SymptomList = forwardRef(
     (
-        { areaGroup, areaId, showSymptomList, selectedSymptoms, setSelectedSymptoms, setShowSymptomList, className },
+        {
+            areaGroup,
+            areaId,
+            setAreaIdx,
+            showSymptomList,
+            setClicked,
+            selectedSymptoms,
+            setSelectedSymptoms,
+            setShowSymptomList,
+            className,
+        },
         ref,
     ) => {
         const getSelectedSymptomIdsByArea = (areaId) => {
@@ -51,6 +61,11 @@ const SymptomList = forwardRef(
             if (!isExist && activeSymptoms.length !== 0) {
                 setSelectedSymptoms((prev) => [...prev, { areaId: areaId, symptomIds: activeSymptoms }]);
             }
+            if (activeSymptoms.length === 0) {
+                setAreaIdx(-1);
+                setClicked(null);
+            }
+
             setShowSymptomList(false);
             setActiveSymptoms([]);
         };
