@@ -22,7 +22,7 @@ const fakeProduct = [
     },
     {
         id: 3,
-        name: 'Viên nang Enpovid A,D phòng và điều trị tình trạng thiếu vitamin A, D (10 vỉ x 10 viên)',
+        name: 'Viên nang Enpovid A,D phòng và điều trị tình trạng thiếu vitamin A, D (11 vỉ x 10 viên)',
         price: 470000,
         description: 'Phòng và Điều trị tình trạng thiếu vitamin A, D',
         image: 'https://prod-cdn.pharmacity.io/e-com/images/ecommerce/1000x1000/P02838_1_l.webp',

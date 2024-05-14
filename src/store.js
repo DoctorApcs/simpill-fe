@@ -1,7 +1,7 @@
 import { createStore } from 'redux';
 
 const initialState = {
-    activeSymptoms: { area: null, activeSymptoms: [] },
+    activeSymptoms: [],
 };
 //reducer
 function reducer(state = initialState, action) {

@@ -1,0 +1,9 @@
+[
+    { "id": 0, "symptomIds": [0, 1, 2] },
+    { "id": 1, "symptomIds": [3, 4, 5] },
+    { "id": 2, "symptomIds": [6, 7, 8] },
+    { "id": 3, "symptomIds": [9, 10, 11] },
+    { "id": 4, "symptomIds": [12, 13, 14] },
+    { "id": 5, "symptomIds": [15, 16, 17] },
+    { "id": 6, "symptomIds": [18, 19, 20] }
+]

@@ -3,32 +3,37 @@ import style from './Loading.module.scss';
 
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import Loaded from './Loaded';
+import { useNavigate } from 'react-router-dom';
+import { useDebounce } from '~/hooks';
 
 const cx = classNames.bind(style);
 function Loading() {
     const [loading, setLoading] = useState(true);
     // Get active symptoms from redux store
     const activeSymptoms = useSelector((state) => state.activeSymptoms);
-    console.log(activeSymptoms);
+
+    // console.log(activeSymptoms);
+
+    const debouncedValue = useDebounce(activeSymptoms, 3000);
+
+    const navigate = useNavigate();
 
     // Simulate loading time
     useEffect(() => {
         setTimeout(() => {
             setLoading(false);
+            document.body.style.backgroundColor = 'white';
+            navigate('/supplements');
         }, 3000);
-    }, []);
+    }, [navigate]);
 
     // Change background color based on loading state
     if (loading) {
         document.body.style.backgroundColor = 'rgb(204, 251, 241)';
-    } else {
-        document.body.style.backgroundColor = 'white';
     }
-
     return (
         <div className={cx('container')}>
-            {loading ? (
+            {loading && (
                 <div className={cx('content')}>
                     <h1 style={{ fontSize: '30px', fontWeight: 800, padding: '20px', textAlign: 'center' }}>
                         Analyzing Symptoms
@@ -37,8 +42,6 @@ function Loading() {
                         Please wait... We’re calculating the data based on your asessment.
                     </p>
                 </div>
-            ) : (
-                <Loaded />
             )}
         </div>
     );

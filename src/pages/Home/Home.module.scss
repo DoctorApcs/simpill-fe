@@ -1,15 +1,26 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding-top: 20rem;
+}
+
 .logo {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 20rem;
+    justify-content: center;
+    gap: 10px;
 }
 
 .slogan {
     font-size: 1.5rem;
     color: #475569;
     font-weight: 600;
-    padding-top: 1rem;
+    padding: 0 20px;
+    text-align: center;
 }
 
 .title {
