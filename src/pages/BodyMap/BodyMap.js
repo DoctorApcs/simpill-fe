@@ -9,8 +9,7 @@ import SymptomList from './SymptomList';
 import Loading from '../Loading';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { useSelector } from 'react-redux';
-import { getBodyAreas, getBodyParts } from '~/handler';
+import { getBodyAreas, getBodyParts, findAreaGroupByAreaId, findAreaIdByBodyPartId } from '~/handler';
 
 const cx = classNames.bind(style);
 function BodyMap() {
@@ -28,6 +27,7 @@ function BodyMap() {
     const bodyAreaButtonsRef = useRef(null);
 
     // state for active symptoms list
+    const [areaIdxList, setAreaIdxList] = useState([]);
     const [selectedSymptoms, setSelectedSymptoms] = useState([]);
 
     // Get body parts and areas
@@ -38,21 +38,30 @@ function BodyMap() {
         return getBodyAreas();
     }, []);
 
+    useEffect(() => {
+        let selectedAreaIdxList = [];
+        for (const selectedSymptom of selectedSymptoms) {
+            selectedAreaIdxList.push(selectedSymptom.areaId);
+        }
+        setAreaIdxList(selectedAreaIdxList);
+    }, [selectedSymptoms, areaIdx]);
+
     const getFill = useCallback(
         (bodyPartId) => {
-            if (areaIdx !== -1) {
-                if (bodyAreas[areaIdx].bodyPartIds.includes(bodyPartId)) return '#F44F5E';
+            for (const areaId of areaIdxList) {
+                if (bodyAreas[areaId].bodyPartIds.includes(bodyPartId)) return '#F44F5E';
             }
             if (areaHoveredIdx !== -1) {
                 if (bodyAreas[areaHoveredIdx].bodyPartIds.includes(bodyPartId)) return '#E8ECF1';
             }
             return '#CBD5E1';
         },
-        [bodyAreas, areaIdx, areaHoveredIdx],
+        [bodyAreas, areaHoveredIdx, areaIdxList],
     );
 
     // Handle click and hover events
     const handleClick = (id) => {
+        setShowSymptomList(true);
         setClicked(id);
     };
 
@@ -68,7 +77,8 @@ function BodyMap() {
 
     // Set area index when clicked or hovered
     useEffect(() => {
-        const areaIndex = findArea(clicked);
+        const areaIndex = findAreaIdByBodyPartId(clicked);
+        // console.log(areaIndex);
         setAreaIdx(areaIndex);
         bodyAreaButtonsRef.current.children[areaIndex]?.scrollIntoView({
             behaivor: 'smooth',
@@ -76,43 +86,43 @@ function BodyMap() {
     }, [clicked]);
 
     useEffect(() => {
-        const areaHoveredIndex = findArea(hovered);
+        const areaHoveredIndex = findAreaIdByBodyPartId(hovered);
         setAreaHoveredIdx(areaHoveredIndex);
     }, [hovered]);
 
-    // Find area index by body part id
-    const findArea = (searchedId) => {
-        for (let i = 0; i < bodyAreas.length; i++) {
-            if (bodyAreas[i].bodyPartIds.includes(searchedId)) {
-                return i;
-            }
-        }
-        return -1;
+    // Close symptom list when clicked outside
+    // useEffect(() => {
+    //     const handleClickOutside = (event) => {
+    //         if (symptomListRef.current && !symptomListRef.current.dialog?.contains(event.target)) {
+    //             if (selectedSymptoms.includes((selectedSymptom) => selectedSymptom.areaId !== areaIdx)) {
+    //                 setAreaIdx(-1);
+    //             }
+    //         }
+    //     };
+    //     document.addEventListener('mousedown', handleClickOutside);
+
+    //     return () => {
+    //         document.removeEventListener('mousedown', handleClickOutside);
+    //     };
+    // }, []);
+
+    const handleClickAreaButton = (index) => {
+        setShowSymptomList(true);
+        setAreaIdx(index);
     };
 
-    useEffect(() => {
-        setShowSymptomList(true);
-    }, [areaIdx]);
-
-    // Close symptom list when clicked outside
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (symptomListRef.current && !symptomListRef.current.dialog?.contains(event.target)) {
-                setAreaIdx(-1);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
+    const handleSubmit = () => {
+        setLoading(true);
+    };
 
     if (isLoading) return <Loading />;
 
     return (
         <Container className="d-inline-flex flex-column justify-content-center" style={{ gap: '20px' }}>
-            <h1 className={cx('header')}>Symptom Checker</h1>
+            <div className={cx('header-content')}>
+                <h1 className={cx('header')}>Symptom Checker</h1>
+                <p1 className={cx('instruction')}>Select a body part where you are experiencing symptoms.</p1>
+            </div>
             <div className={cx('body')}>
                 <BodyContainer>
                     {antBodyParts.map((bodyPart, index) => (
@@ -150,9 +160,9 @@ function BodyMap() {
                         <Button
                             key={index}
                             bsPrefix={cx('body-part-button')}
-                            onClick={() => setAreaIdx(index)}
+                            onClick={() => handleClickAreaButton(index)}
                             style={
-                                index === areaIdx
+                                areaIdxList.includes(index)
                                     ? { color: '#fff', backgroundColor: '#14b8a6' }
                                     : { color: '#000', backgroundColor: '#f1f5f9' }
                             }
@@ -165,15 +175,18 @@ function BodyMap() {
             {areaIdx !== -1 ? (
                 <SymptomList
                     ref={symptomListRef}
-                    area={bodyAreas[areaIdx]}
-                    show={showSymptomList}
-                    handleClose={() => setShowSymptomList(false)}
+                    areaId={areaIdx}
+                    areaGroup={findAreaGroupByAreaId(areaIdx)}
+                    showSymptomList={showSymptomList}
+                    selectedSymptoms={selectedSymptoms}
+                    setSelectedSymptoms={setSelectedSymptoms}
+                    setShowSymptomList={setShowSymptomList}
                 />
             ) : (
                 ''
             )}
             <Button
-                onClick={() => setLoading(true)}
+                onClick={handleSubmit}
                 style={{
                     margin: '8px',
                     padding: '16px 28px',
@@ -183,7 +196,7 @@ function BodyMap() {
                     backgroundColor: '#1e293b',
                 }}
             >
-                Apply
+                Submit
                 <FontAwesomeIcon style={{ paddingLeft: '10px' }} icon={faCheck} />
             </Button>
         </Container>

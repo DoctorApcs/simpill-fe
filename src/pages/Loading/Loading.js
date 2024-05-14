@@ -9,13 +9,12 @@ import { useDebounce } from '~/hooks';
 const cx = classNames.bind(style);
 function Loading() {
     const [loading, setLoading] = useState(true);
-    // Get active symptoms from redu9x store
+    // Get active symptoms from redux store
     const activeSymptoms = useSelector((state) => state.activeSymptoms);
 
     // console.log(activeSymptoms);
 
     const debouncedValue = useDebounce(activeSymptoms, 3000);
-    console.log(debouncedValue);
 
     const navigate = useNavigate();
 

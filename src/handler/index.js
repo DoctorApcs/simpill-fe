@@ -31,3 +31,28 @@ export const findSymptomListByAreaId = (areaID) => {
 export const getAreaGroup = () => {
     return areaGroup;
 };
+
+export const findAreaGroupByAreaGroupId = (areaGroupId) => {
+    return areaGroup.find((group) => group.id === areaGroupId);
+};
+
+export const findAreaGroupByAreaId = (areaId) => {
+    return areaGroup.find((group) => group.areaIds.includes(areaId));
+};
+
+export const findNameByAreaId = (areaId) => {
+    return bodyAreas.find((area) => area.id === areaId).name;
+};
+
+export const findSymptomIdsByAreaId = (areaId) => {
+    return symptomIdsByArea.find((areaSymptom) => areaSymptom.id === areaId).symptomIds;
+};
+
+export const findAreaIdByBodyPartId = (bodyPartId) => {
+    for (const bodyArea of bodyAreas) {
+        if (bodyArea.bodyPartIds.includes(bodyPartId)) {
+            return bodyArea.id;
+        }
+    }
+    return -1;
+};

@@ -10,9 +10,7 @@ function Home() {
         <div className={cx('container')}>
             <div className={cx('logo')}>
                 <Image src={images.logo} />
-                <p className={cx('slogan')}>
-                    A guide to relieve a guide to relieve your symptoms with vitamins and supplements
-                </p>
+                <p className={cx('slogan')}>A guide to relieve your symptoms with vitamins and supplements</p>
             </div>
             <Card.Body>
                 <p className={cx('title')}>Welcome to Simpill</p>
