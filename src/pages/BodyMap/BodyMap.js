@@ -121,7 +121,7 @@ function BodyMap() {
         <Container className="d-inline-flex flex-column justify-content-center" style={{ gap: '20px' }}>
             <div className={cx('header-content')}>
                 <h1 className={cx('header')}>Symptom Checker</h1>
-                <p1 className={cx('instruction')}>Select a body part where you are experiencing symptoms.</p1>
+                <p className={cx('instruction')}>Select a body part where you are experiencing symptoms.</p>
             </div>
             <div className={cx('body')}>
                 <BodyContainer>
@@ -186,6 +186,7 @@ function BodyMap() {
                 ''
             )}
             <Button
+                disabled={selectedSymptoms.length === 0}
                 onClick={handleSubmit}
                 style={{
                     margin: '8px',
