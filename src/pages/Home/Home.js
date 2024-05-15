@@ -3,6 +3,7 @@ import style from './Home.module.scss';
 import { Button, Image, Card } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import images from '~/assets/images';
+import config from '~/config';
 
 const cx = classNames.bind(style);
 function Home() {
@@ -15,7 +16,7 @@ function Home() {
             <Card.Body>
                 <p className={cx('title')}>Welcome to Simpill</p>
             </Card.Body>
-            <NavLink bsPrefix={cx('intro-link')} to="/bodymap">
+            <NavLink bsPrefix={cx('intro-link')} to={config.routes.bodymap}>
                 <Button bsPrefix={cx('intro-button')}>Get Started</Button>
             </NavLink>
         </div>

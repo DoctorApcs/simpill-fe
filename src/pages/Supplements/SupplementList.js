@@ -1,14 +1,14 @@
 import classNames from 'classnames/bind';
 import style from './SupplementList.module.scss';
 
-import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Container, Image } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useMemo } from 'react';
-import { getBodyAreas } from '~/handler';
 import images from '~/assets/images';
+import config from '~/config';
+import Header from '~/layouts/components/Header';
 
 // Fake api data vitamins
 const fakeAPIVitamins = Array.from({ length: 5 }, (_, i) => ({
@@ -20,31 +20,14 @@ function SupplementList() {
     // Get active symptoms from redux store
     const activeSymptoms = useSelector((state) => state.activeSymptoms);
 
-    // Get body area based on active symptoms
-    const bodyArea = useMemo(() => {
-        return getBodyAreas().find((area) => activeSymptoms.area === area.id);
-    }, [activeSymptoms.area]);
-
     return (
         <Container className={cx('container')}>
-            <NavLink to={'/bodymap'}>
-                <Button
-                    style={{
-                        padding: '12px 18px',
-                        borderRadius: '14px',
-                        fontSize: '18px',
-                        backgroundColor: '#f1f5f9',
-                        color: '#000',
-                        borderColor: '#f1f5f9',
-                    }}
-                >
-                    <FontAwesomeIcon icon={faAngleLeft} />
-                </Button>
-            </NavLink>
-            <div>
-                <h1 style={{ fontWeight: 800, fontSize: '28px' }}>Recommended Supplements</h1>
-                <p>Here are the recommended vitamins and supplements to use for your symptoms</p>
-            </div>
+            <Header
+                showBackButton={true}
+                to={config.routes.bodymap}
+                title={'Supplements'}
+                desc={'Here are the recommended vitamins and supplements to use for your symptoms'}
+            />
             <div className={cx('active-symptoms')}>
                 <div className={cx('symptom-logo')}>
                     <Image src={images.symptom} alt="symptom" />
@@ -53,7 +36,6 @@ function SupplementList() {
                     <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#fff', lineHeight: '30px' }}>
                         {activeSymptoms.active?.length} Active symptoms
                     </h3>
-                    <h5 style={{ fontSize: '14px', color: '#fff', fontWeight: 600 }}>{bodyArea?.name}</h5>
                 </div>
             </div>
             <div
@@ -68,7 +50,7 @@ function SupplementList() {
                         <h5 style={{ fontWeight: 800, fontSize: '16px' }}>All Results</h5>
                     </div>
                     {fakeAPIVitamins.map((vitamin, index) => (
-                        <NavLink to={`/supplements/${vitamin.name}`} key={index}>
+                        <NavLink to={`${config.routes.supplement}${vitamin.name}`} key={index}>
                             <Button
                                 key={index}
                                 style={{

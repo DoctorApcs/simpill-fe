@@ -1,0 +1,25 @@
+.wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 100%;
+    display: flex;
+    height: var(--default-layout-header-height, 68px);
+    background-color: transparent;
+}
+
+.back-button {
+    display: flex;
+    margin: 0 var(--default-layout-horizontal-spacer);
+    align-items: flex-start;
+    padding-top: 12px;
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
