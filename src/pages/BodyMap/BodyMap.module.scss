@@ -1,7 +1,25 @@
+.header-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.header {
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.instruction {
+    font-size: 1.5rem;
+    color: #475569;
+    font-weight: 600;
+    padding: 0 20px;
+    text-align: center;
+}
 .body {
     display: flex;
     justify-content: center;
-    margin-top: var(--default-layout-header-height);
 }
 .button-row {
     display: flex;

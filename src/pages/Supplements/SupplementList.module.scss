@@ -2,8 +2,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: var(--default-layout-header-height);
     gap: 24px;
+}
+
+.instruction {
+    font-size: 1.5rem;
+    color: #475569;
+    font-weight: 600;
 }
 .active-symptoms {
     display: inline-flex;

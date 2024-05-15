@@ -22,12 +22,13 @@ function SupplementList() {
 
     return (
         <Container className={cx('container')}>
-            <Header
-                showBackButton={true}
-                to={config.routes.bodymap}
-                title={'Supplements'}
-                desc={'Here are the recommended vitamins and supplements to use for your symptoms'}
-            />
+            <Header showBackButton={true} to={config.routes.bodymap} pageNumb={1} />
+            <div>
+                <h1 style={{ fontWeight: 800, fontSize: '28px' }}>Recommended Supplements</h1>
+                <p className={cx('instruction')}>
+                    Here are the recommended vitamins and supplements to use for your symptoms
+                </p>
+            </div>
             <div className={cx('active-symptoms')}>
                 <div className={cx('symptom-logo')}>
                     <Image src={images.symptom} alt="symptom" />
