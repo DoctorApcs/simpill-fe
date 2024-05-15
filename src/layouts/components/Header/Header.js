@@ -6,25 +6,38 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import config from '~/config';
+import { useEffect, useState } from 'react';
 
 const cx = classNames.bind(style);
-function Header({ showBackButton, to, pageNumb }) {
-    const breadcrumb = [
-        {
-            name: 'Sympotom Checker',
-            to: config.routes.bodymap,
-        },
-        {
-            name: 'Supplements',
-            to: config.routes.supplements,
-        },
-        {
-            name: 'Supplement',
-            to: config.routes.supplement,
-        },
-    ];
+const breadcrumb = [
+    {
+        name: 'Symptoms Checker',
+        to: config.routes.bodymap,
+    },
+    {
+        name: 'Supplements',
+        to: config.routes.supplements,
+    },
+    {
+        name: '',
+        to: config.routes.supplement,
+    },
+];
+function Header({ showBackButton, to, pageNumb, breadCrumbName = '' }) {
+    const [isScroll, setIsScroll] = useState(false);
+
+    useEffect(() => {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 80) {
+                setIsScroll(true);
+            } else {
+                setIsScroll(false);
+            }
+        });
+    }, []);
+
     return (
-        <header className={cx('wrapper')}>
+        <header className={cx('wrapper', `${isScroll ? 'white-header' : ''}`)}>
             <div className={cx('container')}>
                 {showBackButton && (
                     <NavLink to={to} className={cx('back-button')}>
@@ -45,7 +58,7 @@ function Header({ showBackButton, to, pageNumb }) {
                 <div className={cx('breadcrumb')}>
                     {breadcrumb.slice(0, pageNumb + 1).map((item, index) => (
                         <NavLink key={index} to={item.to} className={cx('breadcrumb-item')}>
-                            {item.name}
+                            {item.name ? item.name : breadCrumbName}
                         </NavLink>
                     ))}
                 </div>

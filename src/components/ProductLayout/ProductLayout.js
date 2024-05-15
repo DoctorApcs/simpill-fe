@@ -8,7 +8,7 @@ const cx = classNames.bind(style);
 function ProductLayout({ children, productImg, product, isShowTitle = false }) {
     return (
         <Container className={'d-flex flex-column'} style={{ gap: '32px' }}>
-            <Header showBackButton={true} to={config.routes.supplements} pageNumb={2} />
+            <Header showBackButton={true} to={config.routes.supplements} pageNumb={2} breadCrumbName={product.name} />
             <div className={cx('thumbnail')}>
                 <img className={cx('thumbnail-img')} src={productImg} alt="product.name" />
                 {isShowTitle && (

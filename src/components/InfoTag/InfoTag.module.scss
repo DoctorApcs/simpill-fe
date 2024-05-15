@@ -4,10 +4,35 @@
     gap: 8px;
     align-items: flex-start;
 }
+
 .title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 24px;
+    font-weight: 800;
+    padding: 8px 16px;
+    border-radius: 16px;
+    background-color: #f1f5f9;
+}
+.caret {
+    border-color: transparent transparent var(--black);
+    border-style: solid;
+    border-width: 0 6px 6px;
+    margin-left: 10px;
+    transition: transform 367ms cubic-bezier(0.21, 0, 0.07, 1);
+}
+
+.caret-toggle {
+    transform: rotate(180deg);
+}
+
+.subtitle {
+    padding-left: 16px;
     font-size: 20px;
     font-weight: 800;
 }
+
 .content {
     padding-left: 20px;
     color: #627067;
