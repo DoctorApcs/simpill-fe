@@ -5,7 +5,7 @@ import { forwardRef, useEffect, useRef, useState } from 'react';
 import { Button, Nav, Offcanvas, Tab, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { findSymptomListByAreaId, findAreaGroupByAreaGroupId, findNameByAreaId } from '~/handler';
+import { findSymptomListByAreaId, findNameByAreaId } from '~/handler';
 
 const cx = classNames.bind(style);
 const SymptomList = forwardRef(
@@ -14,8 +14,8 @@ const SymptomList = forwardRef(
             areaGroup,
             areaId,
             setAreaIdx,
-            showSymptomList,
             setClicked,
+            showSymptomList,
             selectedSymptoms,
             setSelectedSymptoms,
             setShowSymptomList,
@@ -33,6 +33,7 @@ const SymptomList = forwardRef(
         useEffect(() => {
             setActiveSymptoms(getSelectedSymptomIdsByArea(areaId));
         }, [areaId, selectedSymptoms]);
+
         // Handle active symptoms and scroll to the last active symptom
         const handleActiveSymptomList = (activeSymptomIds) => {
             setActiveSymptoms([...activeSymptomIds]);
@@ -65,7 +66,6 @@ const SymptomList = forwardRef(
                 setAreaIdx(-1);
                 setClicked(null);
             }
-
             setShowSymptomList(false);
             setActiveSymptoms([]);
         };

@@ -10,6 +10,7 @@ import Loading from '../Loading';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { getBodyAreas, getBodyParts, findAreaGroupByAreaId, findAreaIdByBodyPartId } from '~/handler';
+import Header from '~/layouts/components/Header';
 
 const cx = classNames.bind(style);
 function BodyMap() {
@@ -58,6 +59,7 @@ function BodyMap() {
             }
             return '#CBD5E1';
         },
+        [bodyAreas, areaHoveredIdx, areaIdxList, areaIdx],
         [bodyAreas, areaHoveredIdx, areaIdxList, areaIdx],
     );
 
@@ -120,10 +122,11 @@ function BodyMap() {
 
     return (
         <Container className="d-inline-flex flex-column justify-content-center" style={{ gap: '20px' }}>
-            <div className={cx('header-content')}>
-                <h1 className={cx('header')}>Symptom Checker</h1>
-                <p className={cx('instruction')}>Select a body part where you are experiencing symptoms.</p>
-            </div>
+            <Header
+                showBackButton={false}
+                title={'Symptom Checker'}
+                desc={'Select a body part where you are experiencing symptoms.'}
+            />
             <div className={cx('body')}>
                 <BodyContainer>
                     {antBodyParts.map((bodyPart, index) => (
@@ -177,10 +180,10 @@ function BodyMap() {
                 <SymptomList
                     ref={symptomListRef}
                     areaId={areaIdx}
-                    setAreaIdx={setAreaIdx}
-                    areaGroup={findAreaGroupByAreaId(areaIdx)}
                     showSymptomList={showSymptomList}
+                    areaGroup={findAreaGroupByAreaId(areaIdx)}
                     setClicked={setClicked}
+                    setAreaIdx={setAreaIdx}
                     selectedSymptoms={selectedSymptoms}
                     setSelectedSymptoms={setSelectedSymptoms}
                     setShowSymptomList={setShowSymptomList}
