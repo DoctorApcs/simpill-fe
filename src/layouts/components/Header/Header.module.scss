@@ -8,6 +8,11 @@
     height: var(--default-layout-header-height, 68px);
     background-color: transparent;
 }
+
+.white-header {
+    background-color: var(--white);
+}
+
 .container {
     display: flex;
     align-items: center;

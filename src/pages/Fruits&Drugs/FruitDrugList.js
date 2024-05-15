@@ -62,14 +62,6 @@ function FruitDrugList() {
                     ))}
                 </div>
             </div>
-            <div>
-                <h1 style={{ fontWeight: 800 }}>Fruits Recommended For You</h1>
-                <div className={cx('product-list')}>
-                    {fakeProduct.map((product, index) => (
-                        <ProductCard key={index} product={product} />
-                    ))}
-                </div>
-            </div>
         </Container>
     );
 }
