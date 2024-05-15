@@ -60,7 +60,7 @@ function BodyMap() {
             return '#CBD5E1';
         },
         [bodyAreas, areaHoveredIdx, areaIdxList, areaIdx],
-        [bodyAreas, areaHoveredIdx, areaIdxList, areaIdx],
+ 
     );
 
     // Handle click and hover events
