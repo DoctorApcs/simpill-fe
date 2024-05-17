@@ -2,8 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { publicRoutes } from './routes';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss';
-import { Provider } from 'react-redux';
-import store from './store';
 import DefaultLayout from '~/layouts/DefaultLayout';
 import { Fragment } from 'react';
 
@@ -24,9 +22,7 @@ function App() {
                                 path={route.path}
                                 element={
                                     <Layout>
-                                        <Provider store={store}>
-                                            <Page />
-                                        </Provider>
+                                        <Page />
                                     </Layout>
                                 }
                             />

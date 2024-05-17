@@ -1,0 +1,38 @@
+.wrapper {
+    padding: 16px 8px 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px;
+}
+
+.search-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-right: 4px;
+    background-color: #f1f5f9;
+    border-radius: 16px;
+    overflow: hidden;
+    border: #14b8a6 2px solid;
+    .search-input {
+        background-color: transparent;
+        width: 100%;
+        padding: 16px;
+        color: #475569;
+        font-weight: 600;
+        font-size: 1.6rem;
+    }
+    .close-icon {
+        padding-right: 10px;
+        color: #475569;
+    }
+}

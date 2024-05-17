@@ -1,12 +1,13 @@
 import classNames from 'classnames/bind';
 import style from './Header.module.scss';
 
-import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
+import { faAngleLeft, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import config from '~/config';
 import { useEffect, useState } from 'react';
+import Search from './Search';
 
 const cx = classNames.bind(style);
 const breadcrumb = [
@@ -25,10 +26,11 @@ const breadcrumb = [
 ];
 function Header({ showBackButton, to, pageNumb, breadCrumbName = '' }) {
     const [isScroll, setIsScroll] = useState(false);
+    const [showSearchBox, setShowSearchBox] = useState(false);
 
     useEffect(() => {
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 80) {
+            if (window.scrollY > 60) {
                 setIsScroll(true);
             } else {
                 setIsScroll(false);
@@ -62,6 +64,20 @@ function Header({ showBackButton, to, pageNumb, breadCrumbName = '' }) {
                         </NavLink>
                     ))}
                 </div>
+                <Button
+                    style={{
+                        padding: '12px 18px',
+                        borderRadius: '14px',
+                        fontSize: '18px',
+                        backgroundColor: '#f1f5f9',
+                        color: '#000',
+                        borderColor: '#f1f5f9',
+                    }}
+                    onClick={() => setShowSearchBox(true)}
+                >
+                    <FontAwesomeIcon icon={faSearch} />
+                </Button>
+                <Search showSearchBox={showSearchBox} setShowSearchBox={setShowSearchBox} />
             </div>
         </header>
     );

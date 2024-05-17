@@ -6,11 +6,12 @@ import BodyPart from './BodyPart';
 import BodyContainer from './BodyContainer';
 import { Button, Container } from 'react-bootstrap';
 import SymptomList from './SymptomList';
-import Loading from '../Loading';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { getBodyAreas, getBodyParts, findAreaGroupByAreaId, findAreaIdByBodyPartId } from '~/handler';
 import Header from '~/layouts/components/Header';
+import { NavLink } from 'react-router-dom';
+import config from '~/config';
 
 const cx = classNames.bind(style);
 function BodyMap() {
@@ -18,19 +19,38 @@ function BodyMap() {
     const [clicked, setClicked] = useState(null);
     const [hovered, setHovered] = useState(null);
     const [areaIdx, setAreaIdx] = useState(-1);
+    const [areaIdNav, setAreaIdNav] = useState(-1);
     const [areaHoveredIdx, setAreaHoveredIdx] = useState(-1);
     //state for showing symptom list
     const [showSymptomList, setShowSymptomList] = useState(false);
-    //state for loading
-    const [isLoading, setLoading] = useState(false);
     //get ref for symptom list and body area buttons
     const symptomListRef = useRef(null);
     const bodyAreaButtonsRef = useRef(null);
 
     // state for active symptoms list
     const [areaIdxList, setAreaIdxList] = useState([]);
-    const [selectedSymptoms, setSelectedSymptoms] = useState([]);
+    const [selectedSymptoms, setSelectedSymptoms] = useState(() => {
+        // Try to get the initial state from local storage
+        const storedData = localStorage.getItem('selectedSymptoms');
+        if (storedData) {
+            const { timestamp, symptoms } = JSON.parse(storedData);
+            const oneHour = 0; // in milliseconds
+            const isExpired = Date.now() - timestamp > oneHour;
+            if (!isExpired) {
+                return symptoms;
+            }
+        }
+        return [];
+    });
 
+    // Save selected symptoms to local storage
+    useEffect(() => {
+        const data = {
+            timestamp: Date.now(), // Store a timestamp
+            symptoms: selectedSymptoms,
+        };
+        localStorage.setItem('selectedSymptoms', JSON.stringify(data));
+    }, [selectedSymptoms]);
     // Get body parts and areas
     const antBodyParts = useMemo(() => {
         return getBodyParts().filter(({ face }) => face === 'ant');
@@ -46,6 +66,7 @@ function BodyMap() {
         }
         setAreaIdxList(selectedAreaIdxList);
     }, [selectedSymptoms, areaIdx]);
+
     const getFill = useCallback(
         (bodyPartId) => {
             if (areaIdx !== -1) {
@@ -60,7 +81,6 @@ function BodyMap() {
             return '#CBD5E1';
         },
         [bodyAreas, areaHoveredIdx, areaIdxList, areaIdx],
- 
     );
 
     // Handle click and hover events
@@ -81,44 +101,29 @@ function BodyMap() {
 
     // Set area index when clicked or hovered
     useEffect(() => {
-        const areaIndex = findAreaIdByBodyPartId(clicked);
+        let areaIndex = findAreaIdByBodyPartId(clicked);
+        if (areaIndex === 0 && areaIdNav !== -1) {
+            areaIndex = areaIdNav;
+        }
         setAreaIdx(areaIndex);
         bodyAreaButtonsRef.current.children[areaIndex]?.scrollIntoView({
             behaivor: 'smooth',
         });
-    }, [clicked]);
+    }, [clicked, areaIdNav]);
 
     useEffect(() => {
         const areaHoveredIndex = findAreaIdByBodyPartId(hovered);
         setAreaHoveredIdx(areaHoveredIndex);
     }, [hovered]);
 
-    // Close symptom list when clicked outside
-    // useEffect(() => {
-    //     const handleClickOutside = (event) => {
-    //         if (symptomListRef.current && !symptomListRef.current.dialog?.contains(event.target)) {
-    //             if (selectedSymptoms.includes((selectedSymptom) => selectedSymptom.areaId !== areaIdx)) {
-    //                 setAreaIdx(-1);
-    //             }
-    //         }
-    //     };
-    //     document.addEventListener('mousedown', handleClickOutside);
-
-    //     return () => {
-    //         document.removeEventListener('mousedown', handleClickOutside);
-    //     };
-    // }, []);
-
     const handleClickAreaButton = (index) => {
         setShowSymptomList(true);
         setAreaIdx(index);
     };
 
-    const handleSubmit = () => {
-        setLoading(true);
-    };
-
-    if (isLoading) return <Loading />;
+    useEffect(() => {
+        console.log(selectedSymptoms);
+    }, [selectedSymptoms]);
 
     return (
         <Container className="d-inline-flex flex-column justify-content-center" style={{ gap: '20px' }}>
@@ -141,22 +146,6 @@ function BodyMap() {
                         />
                     ))}
                 </BodyContainer>
-                {/* <div>
-                    <p>{txt[2]}</p>
-                    <BodyContainer>
-                        {postBodyPart.map((bodyPart, index) => (
-                            <BodyPart
-                                key={index}
-                                id={bodyPart.id}
-                                d={bodyPart.d}
-                                fill={getFill(bodyPart.id)}
-                                onClick={handleClick}
-                                onMouseEnter={handleMouseEnter}
-                                onMouseLeave={handleMouseLeave}
-                            />
-                       ))}
-                    </BodyContainer>
-                </div> */}
             </div>
             <div className={cx('button-row')} ref={bodyAreaButtonsRef}>
                 {bodyAreas.map((area, index) => (
@@ -180,6 +169,7 @@ function BodyMap() {
                 <SymptomList
                     ref={symptomListRef}
                     areaId={areaIdx}
+                    setAreaIdNav={setAreaIdNav}
                     showSymptomList={showSymptomList}
                     areaGroup={findAreaGroupByAreaId(areaIdx)}
                     setClicked={setClicked}
@@ -191,21 +181,13 @@ function BodyMap() {
             ) : (
                 ''
             )}
-            <Button
-                disabled={selectedSymptoms.length === 0}
-                onClick={handleSubmit}
-                style={{
-                    margin: '8px',
-                    padding: '16px 28px',
-                    borderColor: '#1e293b',
-                    fontWeight: 700,
-                    fontSize: '16px',
-                    backgroundColor: '#1e293b',
-                }}
+            <NavLink
+                to={selectedSymptoms.length === 0 ? '#' : config.routes.supplements}
+                className={cx('submit-button', `${selectedSymptoms.length === 0 ? 'disabled-link' : ''}`)}
             >
                 Submit
                 <FontAwesomeIcon style={{ paddingLeft: '10px' }} icon={faCheck} />
-            </Button>
+            </NavLink>
         </Container>
     );
 }

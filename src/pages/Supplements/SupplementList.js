@@ -3,12 +3,14 @@ import style from './SupplementList.module.scss';
 
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Container, Image } from 'react-bootstrap';
+import { Button, Collapse, Container, Image } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import images from '~/assets/images';
 import config from '~/config';
 import Header from '~/layouts/components/Header';
+import Loading from '../Loading';
+import { useEffect, useState } from 'react';
+import SymptomsTable from '~/components/SymptomsTable';
 
 // Fake api data vitamins
 const fakeAPIVitamins = Array.from({ length: 5 }, (_, i) => ({
@@ -17,9 +19,23 @@ const fakeAPIVitamins = Array.from({ length: 5 }, (_, i) => ({
 }));
 const cx = classNames.bind(style);
 function SupplementList() {
-    // Get active symptoms from redux store
-    const activeSymptoms = useSelector((state) => state.activeSymptoms);
+    const [loading, setLoading] = useState(true);
+    const [openTable, setOpenTable] = useState(false);
+    const selectedSymptoms = JSON.parse(localStorage.getItem('selectedSymptoms')).symptoms;
+    useEffect(() => {
+        if (loading) {
+            document.body.style.backgroundColor = 'rgb(204, 251, 241)';
+        }
+        setTimeout(() => {
+            setLoading(false);
+        }, 3000);
+        return () => {
+            document.body.style.backgroundColor = 'white';
+            clearTimeout();
+        };
+    }, [loading]);
 
+    if (loading) return <Loading />;
     return (
         <Container className={cx('container')}>
             <Header showBackButton={true} to={config.routes.bodymap} pageNumb={1} />
@@ -29,16 +45,26 @@ function SupplementList() {
                     Here are the recommended vitamins and supplements to use for your symptoms
                 </p>
             </div>
-            <div className={cx('active-symptoms')}>
-                <div className={cx('symptom-logo')}>
-                    <Image src={images.symptom} alt="symptom" />
+            <Button bsPrefix={cx('active-symptoms')} onClick={() => setOpenTable(!openTable)}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <div className={cx('symptom-logo')}>
+                            <Image src={images.symptom} alt="symptom" />
+                        </div>
+                        <div style={{ paddingLeft: '8px' }}>
+                            <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#fff', lineHeight: '30px' }}>
+                                Active symptoms
+                            </h3>
+                        </div>
+                    </div>
+                    <span className={cx('caret', `${openTable ? 'caret-toggle' : ''}`)}></span>
                 </div>
-                <div style={{ paddingLeft: '8px' }}>
-                    <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#fff', lineHeight: '30px' }}>
-                        {activeSymptoms.active?.length} Active symptoms
-                    </h3>
-                </div>
-            </div>
+                <Collapse in={openTable} style={{ paddingTop: '20px', width: '100%' }}>
+                    <div style={{ backgroundColor: 'transparent' }}>
+                        <SymptomsTable areas={selectedSymptoms} />
+                    </div>
+                </Collapse>
+            </Button>
             <div
                 style={{
                     display: 'flex',

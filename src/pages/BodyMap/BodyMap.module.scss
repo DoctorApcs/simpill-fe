@@ -42,3 +42,20 @@
     font-size: 18px;
     font-weight: 600;
 }
+
+.submit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1e293b;
+    color: var(--white);
+    font-weight: 700;
+    font-size: 1.6rem;
+    border-radius: 8px;
+    padding: 16px 28px;
+}
+.disabled-link {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.8;
+}

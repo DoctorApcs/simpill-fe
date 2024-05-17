@@ -5,7 +5,7 @@ import { forwardRef, useEffect, useRef, useState } from 'react';
 import { Button, Nav, Offcanvas, Tab, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { findSymptomListByAreaId, findNameByAreaId } from '~/handler';
+import { findSymptomListByAreaId, findAreaNameByAreaId } from '~/handler';
 
 const cx = classNames.bind(style);
 const SymptomList = forwardRef(
@@ -14,6 +14,7 @@ const SymptomList = forwardRef(
             areaGroup,
             areaId,
             setAreaIdx,
+            setAreaIdNav,
             setClicked,
             showSymptomList,
             selectedSymptoms,
@@ -24,15 +25,12 @@ const SymptomList = forwardRef(
         ref,
     ) => {
         const getSelectedSymptomIdsByArea = (areaId) => {
+            console.log(selectedSymptoms);
             return selectedSymptoms.find((selectedSymptom) => selectedSymptom.areaId === areaId)?.symptomIds || [];
         };
         const [activeSymptoms, setActiveSymptoms] = useState([]);
         const [selectedKey, setSelectedKey] = useState(areaId);
         const buttonGroupRef = useRef(null);
-
-        useEffect(() => {
-            setActiveSymptoms(getSelectedSymptomIdsByArea(areaId));
-        }, [areaId, selectedSymptoms]);
 
         // Handle active symptoms and scroll to the last active symptom
         const handleActiveSymptomList = (activeSymptomIds) => {
@@ -45,6 +43,27 @@ const SymptomList = forwardRef(
         };
 
         const handleClose = () => {
+            if (activeSymptoms.length === 0) {
+                setAreaIdx(-1);
+                setClicked(null);
+            }
+            setShowSymptomList(false);
+        };
+        const handleSelectedKey = (key) => {
+            console.log(key);
+            setAreaIdNav(Number(key));
+            return setSelectedKey(Number(key));
+        };
+
+        useEffect(() => {
+            setSelectedKey(areaId);
+        }, [areaId]);
+
+        useEffect(() => {
+            setActiveSymptoms(getSelectedSymptomIdsByArea(areaId));
+        }, [areaId]);
+
+        useEffect(() => {
             let isExist = false;
             for (let i = 0; i < selectedSymptoms?.length; i++) {
                 if (selectedSymptoms[i]?.areaId === areaId) {
@@ -62,20 +81,8 @@ const SymptomList = forwardRef(
             if (!isExist && activeSymptoms.length !== 0) {
                 setSelectedSymptoms((prev) => [...prev, { areaId: areaId, symptomIds: activeSymptoms }]);
             }
-            if (activeSymptoms.length === 0) {
-                setAreaIdx(-1);
-                setClicked(null);
-            }
-            setShowSymptomList(false);
-            setActiveSymptoms([]);
-        };
-        const handleSelectedKey = (key) => {
-            return setSelectedKey(Number(key));
-        };
-
-        useEffect(() => {
-            setSelectedKey(areaId);
-        }, [areaId]);
+            console.log(activeSymptoms);
+        }, [activeSymptoms]);
         return (
             <Offcanvas
                 id={cx('container', className)}
@@ -93,7 +100,7 @@ const SymptomList = forwardRef(
                                         <Nav.Item
                                             style={areaId === selectedKey ? { color: '#14b8a6' } : { color: '#000' }}
                                         >
-                                            {findNameByAreaId(areaId)}
+                                            {findAreaNameByAreaId(areaId)}
                                         </Nav.Item>
                                     </Nav.Link>
                                 ))}
