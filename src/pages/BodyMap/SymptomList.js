@@ -13,7 +13,6 @@ const SymptomList = forwardRef(
         {
             areaGroup,
             areaId,
-            setClicked,
             showSymptomList,
             selectedSymptoms,
             setSelectedSymptoms,
@@ -36,6 +35,10 @@ const SymptomList = forwardRef(
             setActiveSymptomsByAreaId({ areaId: selectedKey, symptoms: getSelectedSymptomIdsByArea(selectedKey) })
         }, [selectedKey]);
 
+        useEffect(() => {
+            setSelectedKey(areaId); 
+        }, [areaId])
+
         // Handle active symptoms and scroll to the last active symptom
         const handleActiveSymptomList = (activeSymptomIds) => {
             setActiveSymptomsByAreaId({areaId:selectedKey, symptoms: [...activeSymptomIds]});
@@ -47,9 +50,6 @@ const SymptomList = forwardRef(
         };
 
         const handleClose = () => {
-            if (activeSymptomsByAreaId.symptoms.length === 0) {
-                setClicked(null);
-            }
             setShowSymptomList(false);
         };
 
@@ -85,7 +85,7 @@ const SymptomList = forwardRef(
                 onHide={handleClose}
                 ref={ref}
             >
-                <Tab.Container activeKey={selectedKey} onSelect={(k) => handleSelectedKey(k)}>
+                <Tab.Container defaultActiveKey={areaId} activeKey={selectedKey} onSelect={(k) => handleSelectedKey(k)}>
                     <Offcanvas.Header style={{ padding: '20px 20px 0', display: 'flex' }}>
                         <Nav variant="tabs">
                             <Offcanvas.Title style={{ fontSize: '20px', fontWeight: 800, display: 'flex' }}>
