@@ -19,7 +19,6 @@ function BodyMap() {
     const [clicked, setClicked] = useState(null);
     const [hovered, setHovered] = useState(null);
     const [areaIdx, setAreaIdx] = useState(-1);
-    const [areaIdNav, setAreaIdNav] = useState(-1);
     const [areaHoveredIdx, setAreaHoveredIdx] = useState(-1);
     //state for showing symptom list
     const [showSymptomList, setShowSymptomList] = useState(false);
@@ -34,7 +33,7 @@ function BodyMap() {
         const storedData = localStorage.getItem('selectedSymptoms');
         if (storedData) {
             const { timestamp, symptoms } = JSON.parse(storedData);
-            const oneHour = 0; // in milliseconds
+            const oneHour = 60*60*1000; // in milliseconds
             const isExpired = Date.now() - timestamp > oneHour;
             if (!isExpired) {
                 return symptoms;
@@ -51,10 +50,12 @@ function BodyMap() {
         };
         localStorage.setItem('selectedSymptoms', JSON.stringify(data));
     }, [selectedSymptoms]);
+
     // Get body parts and areas
     const antBodyParts = useMemo(() => {
         return getBodyParts().filter(({ face }) => face === 'ant');
     }, []);
+
     const bodyAreas = useMemo(() => {
         return getBodyAreas();
     }, []);
@@ -65,7 +66,7 @@ function BodyMap() {
             selectedAreaIdxList.push(selectedSymptom.areaId);
         }
         setAreaIdxList(selectedAreaIdxList);
-    }, [selectedSymptoms, areaIdx]);
+    }, [selectedSymptoms]);
 
     const getFill = useCallback(
         (bodyPartId) => {
@@ -101,15 +102,12 @@ function BodyMap() {
 
     // Set area index when clicked or hovered
     useEffect(() => {
-        let areaIndex = findAreaIdByBodyPartId(clicked);
-        if (areaIndex === 0 && areaIdNav !== -1) {
-            areaIndex = areaIdNav;
-        }
+        const areaIndex = findAreaIdByBodyPartId(clicked);
         setAreaIdx(areaIndex);
         bodyAreaButtonsRef.current.children[areaIndex]?.scrollIntoView({
             behaivor: 'smooth',
         });
-    }, [clicked, areaIdNav]);
+    }, [clicked]);
 
     useEffect(() => {
         const areaHoveredIndex = findAreaIdByBodyPartId(hovered);
@@ -120,10 +118,6 @@ function BodyMap() {
         setShowSymptomList(true);
         setAreaIdx(index);
     };
-
-    useEffect(() => {
-        console.log(selectedSymptoms);
-    }, [selectedSymptoms]);
 
     return (
         <Container className="d-inline-flex flex-column justify-content-center" style={{ gap: '20px' }}>
@@ -169,11 +163,9 @@ function BodyMap() {
                 <SymptomList
                     ref={symptomListRef}
                     areaId={areaIdx}
-                    setAreaIdNav={setAreaIdNav}
                     showSymptomList={showSymptomList}
                     areaGroup={findAreaGroupByAreaId(areaIdx)}
                     setClicked={setClicked}
-                    setAreaIdx={setAreaIdx}
                     selectedSymptoms={selectedSymptoms}
                     setSelectedSymptoms={setSelectedSymptoms}
                     setShowSymptomList={setShowSymptomList}

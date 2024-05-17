@@ -13,8 +13,6 @@ const SymptomList = forwardRef(
         {
             areaGroup,
             areaId,
-            setAreaIdx,
-            setAreaIdNav,
             setClicked,
             showSymptomList,
             selectedSymptoms,
@@ -24,17 +22,23 @@ const SymptomList = forwardRef(
         },
         ref,
     ) => {
-        const getSelectedSymptomIdsByArea = (areaId) => {
-            console.log(selectedSymptoms);
-            return selectedSymptoms.find((selectedSymptom) => selectedSymptom.areaId === areaId)?.symptomIds || [];
+        // Set the initial state of active symptoms by area 
+        const getSelectedSymptomIdsByArea = (areaIdx) => {
+            return selectedSymptoms.find((selectedSymptom) => selectedSymptom.areaId === areaIdx)?.symptomIds || [];
         };
-        const [activeSymptoms, setActiveSymptoms] = useState([]);
+        
         const [selectedKey, setSelectedKey] = useState(areaId);
+        const [activeSymptomsByAreaId, setActiveSymptomsByAreaId] = useState({areaId: selectedKey, symptoms: getSelectedSymptomIdsByArea(selectedKey)});
         const buttonGroupRef = useRef(null);
+        
+        
+        useEffect(() => {
+            setActiveSymptomsByAreaId({ areaId: selectedKey, symptoms: getSelectedSymptomIdsByArea(selectedKey) })
+        }, [selectedKey]);
 
         // Handle active symptoms and scroll to the last active symptom
         const handleActiveSymptomList = (activeSymptomIds) => {
-            setActiveSymptoms([...activeSymptomIds]);
+            setActiveSymptomsByAreaId({areaId:selectedKey, symptoms: [...activeSymptomIds]});
             const lastActiveSymptom = activeSymptomIds[activeSymptomIds.length - 1];
             buttonGroupRef.current.children[(lastActiveSymptom - 1) * 2 + 1]?.scrollIntoView({
                 behavior: 'auto',
@@ -43,46 +47,36 @@ const SymptomList = forwardRef(
         };
 
         const handleClose = () => {
-            if (activeSymptoms.length === 0) {
-                setAreaIdx(-1);
+            if (activeSymptomsByAreaId.symptoms.length === 0) {
                 setClicked(null);
             }
             setShowSymptomList(false);
         };
+
         const handleSelectedKey = (key) => {
-            console.log(key);
-            setAreaIdNav(Number(key));
             return setSelectedKey(Number(key));
         };
 
         useEffect(() => {
-            setSelectedKey(areaId);
-        }, [areaId]);
-
-        useEffect(() => {
-            setActiveSymptoms(getSelectedSymptomIdsByArea(areaId));
-        }, [areaId]);
-
-        useEffect(() => {
             let isExist = false;
             for (let i = 0; i < selectedSymptoms?.length; i++) {
-                if (selectedSymptoms[i]?.areaId === areaId) {
+                if (selectedSymptoms[i]?.areaId === selectedKey) {
                     isExist = true;
                     setSelectedSymptoms((prev) => {
-                        if (activeSymptoms.length === 0) {
+                        if (activeSymptomsByAreaId.symptoms.length === 0) {
                             prev.splice(i, 1);
                         } else {
-                            prev[i] = { areaId, symptomIds: activeSymptoms };
+                            prev[i] = { areaId: selectedKey, symptomIds: activeSymptomsByAreaId.symptoms };
                         }
                         return [...prev];
                     });
                 }
             }
-            if (!isExist && activeSymptoms.length !== 0) {
-                setSelectedSymptoms((prev) => [...prev, { areaId: areaId, symptomIds: activeSymptoms }]);
+            if (!isExist && activeSymptomsByAreaId.symptoms.length !== 0) {
+                setSelectedSymptoms((prev) => [...prev, { areaId: selectedKey, symptomIds: activeSymptomsByAreaId.symptoms }]);
             }
-            console.log(activeSymptoms);
-        }, [activeSymptoms]);
+        }, [activeSymptomsByAreaId]);
+
         return (
             <Offcanvas
                 id={cx('container', className)}
@@ -113,7 +107,7 @@ const SymptomList = forwardRef(
                                 <Tab.Pane key={index} eventKey={areaId}>
                                     <ToggleButtonGroup
                                         type="checkbox"
-                                        value={activeSymptoms}
+                                        value={activeSymptomsByAreaId.symptoms}
                                         onChange={handleActiveSymptomList}
                                         bsPrefix={cx('symptom-list')}
                                         ref={buttonGroupRef}
@@ -122,14 +116,14 @@ const SymptomList = forwardRef(
                                             <ToggleButton
                                                 key={symptomIndex}
                                                 style={{
-                                                    backgroundColor: activeSymptoms.includes(symptom.id)
+                                                    backgroundColor: activeSymptomsByAreaId.symptoms.includes(symptom.id)
                                                         ? '#14b8a6'
                                                         : '#f1f5f9',
-                                                    color: activeSymptoms.includes(symptom.id) ? '#fff' : '#000',
+                                                    color: activeSymptomsByAreaId.symptoms.includes(symptom.id) ? '#fff' : '#000',
                                                     fontWeight: 600,
                                                     fontSize: '16px',
                                                     boxShadow:
-                                                        activeSymptoms.includes(symptom.id) &&
+                                                        activeSymptomsByAreaId.symptoms.includes(symptom.id) &&
                                                         '0px 0px 0px 4px #14b8a640',
                                                     borderRadius: '14px',
                                                     padding: '14px',
