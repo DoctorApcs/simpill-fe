@@ -16,13 +16,20 @@ function Search({ showSearchBox, setShowSearchBox }) {
         setSearchValue('');
         inputRef.current.focus();
     };
+    const handleFocusInput = () => {
+        setTimeout(() => {
+            if (inputRef.current) {
+                inputRef.current.focus();
+            }
+        }, 0);
+    }
     return (
         <Offcanvas
             placement="top"
             show={showSearchBox}
             onHide={handleClose}
             style={{ height: '50vh' }}
-            onEnter={() => inputRef.current.focus()}
+            onEnter={handleFocusInput}
         >
             <div className={cx('wrapper')}>
                 <h1 style={{ fontSize: '16px', fontWeight: 800 }}>Search Supplements</h1>

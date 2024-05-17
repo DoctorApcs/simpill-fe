@@ -12,6 +12,7 @@ import { getBodyAreas, getBodyParts, findAreaGroupByAreaId, findAreaIdByBodyPart
 import Header from '~/layouts/components/Header';
 import { NavLink } from 'react-router-dom';
 import config from '~/config';
+import { getAllSymptoms } from '~/api/symptoms';
 
 const cx = classNames.bind(style);
 function BodyMap() {
@@ -119,6 +120,17 @@ function BodyMap() {
         setAreaIdx(index);
     };
 
+    useEffect(() => {
+        if(!showSymptomList) {
+            setAreaIdx(-1);
+            setClicked(null);
+        }
+    }, [showSymptomList]);
+
+    useEffect(() => {
+        console.log(getAllSymptoms())
+    }, [getAllSymptoms()])
+
     return (
         <Container className="d-inline-flex flex-column justify-content-center" style={{ gap: '20px' }}>
             <Header pageNumb={0} />
@@ -163,11 +175,10 @@ function BodyMap() {
                 <SymptomList
                     ref={symptomListRef}
                     areaId={areaIdx}
-                    showSymptomList={showSymptomList}
                     areaGroup={findAreaGroupByAreaId(areaIdx)}
-                    setClicked={setClicked}
                     selectedSymptoms={selectedSymptoms}
                     setSelectedSymptoms={setSelectedSymptoms}
+                    showSymptomList={showSymptomList}
                     setShowSymptomList={setShowSymptomList}
                 />
             ) : (
