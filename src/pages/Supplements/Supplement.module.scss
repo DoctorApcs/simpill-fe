@@ -23,12 +23,13 @@
 .content {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 16px;
 }
 
 mark {
-    background-color: #f1f5f9;
-    color: #000;
+    background-color: var(--primary)!important;
+    color: white!important;
     padding: 4px;
     border-radius: 4px;
 }

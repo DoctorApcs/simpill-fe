@@ -13,6 +13,7 @@ import FruitDrugList from '~/pages/Fruits&Drugs/FruitDrugList';
 import * as supplementService from '~/services/supplementService';
 import Switch from '@mui/material/Switch'
 import FormControlLabel from '@mui/material/FormControlLabel';
+import * as winkjsService from '~/services/winkjsService';
 
 // const supplement = {
 //     name: 'VITAMIN A',
@@ -88,13 +89,50 @@ const switchButton = [
         name: 'Fruits & Drugs',
     },
 ];
+
+const extractLiValues = (htmlString) => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, 'text/html');
+    const liElements = doc.querySelectorAll('li');
+    const liValues = Array.from(liElements).map(li => li.textContent);
+    return liValues;
+}
+
+const concatLiValues = (values) => {
+    return '<ul>' + values.map(value => `<li>${value}</li>`).join('') + '</ul>';
+}
+
 function Supplement() {
     const [activeId, setActiveId] = useState(0);
     const [supplement, setSupplement] = useState({});
     const [isHighlighted, setIsHighlighted] = useState(false);
     const { name } = useParams();
 
-    const handleSwitch = () => {
+    const handleSwitch = async () => {
+        if (isHighlighted) {
+            const overview = winkjsService.unhightLightText(supplement.overview);
+            supplement.overview = overview;
+
+            for (let i = 0; i < supplement.uses.length; i++) {
+                const text = winkjsService.unhightLightText(supplement.uses[i].uses);
+                supplement.uses[i].uses = text;
+            }
+        } else {
+            const overview = await winkjsService.highLightText(supplement.overview);
+            supplement.overview = overview;
+
+            for (let i = 0; i < supplement.uses.length; i++) {
+                const uses = extractLiValues(supplement.uses[i].uses);
+                console.log(uses);
+                const highlightedUses = [];
+                for (let j = 0; j < uses.length; j++) {
+                    const highlightedText = await winkjsService.highLightText(uses[j], 0.95);
+                    highlightedUses.push(highlightedText);
+                }
+                supplement.uses[i].uses = concatLiValues(highlightedUses);
+            }
+        }
+
         setIsHighlighted(!isHighlighted);
     }
 
@@ -141,9 +179,10 @@ function Supplement() {
                                 label="Highlight the key points"
                                 sx={{
                                     '& .MuiFormControlLabel-label': {
-                                        fontSize: '16px',
-                                        fontWeight: 550,
-                                        fontFamily: 'sans-serif',
+                                        fontSize: '15px',
+                                        fontWeight: 600,
+                                        fontFamily: 'Manrope',
+                                        color: '#627067'
                                     }
                                 }}
                             />
