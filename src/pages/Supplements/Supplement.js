@@ -11,7 +11,7 @@ import Uses from '~/components/InfoTag/Uses';
 import ProductLayout from '~/components/ProductLayout';
 import FruitDrugList from '~/pages/Fruits&Drugs/FruitDrugList';
 import * as supplementService from '~/services/supplementService';
-import Switch from '@mui/material/Switch'
+import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import * as winkjsService from '~/services/winkjsService';
 
@@ -94,13 +94,13 @@ const extractLiValues = (htmlString) => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlString, 'text/html');
     const liElements = doc.querySelectorAll('li');
-    const liValues = Array.from(liElements).map(li => li.textContent);
+    const liValues = Array.from(liElements).map((li) => li.textContent);
     return liValues;
-}
+};
 
 const concatLiValues = (values) => {
-    return '<ul>' + values.map(value => `<li>${value}</li>`).join('') + '</ul>';
-}
+    return '<ul>' + values.map((value) => `<li>${value}</li>`).join('') + '</ul>';
+};
 
 function Supplement() {
     const [activeId, setActiveId] = useState(0);
@@ -134,7 +134,7 @@ function Supplement() {
         }
 
         setIsHighlighted(!isHighlighted);
-    }
+    };
 
     useState(() => {
         const fetchApi = async () => {
@@ -175,15 +175,39 @@ function Supplement() {
                     <Tab.Pane eventKey={0}>
                         <div className={cx('content')}>
                             <FormControlLabel
-                                control={<Switch checked={isHighlighted} onChange={handleSwitch} />}
+                                control={
+                                    <Switch
+                                        checked={isHighlighted}
+                                        onChange={handleSwitch}
+                                        sx={{
+                                            '& .MuiSwitch-switchBase.Mui-checked': {
+                                                color: 'rgb(20, 184, 166)',
+                                                '&:hover': {
+                                                    backgroundColor: 'rgba(241, 245, 249, 0.08)',
+                                                },
+                                            },
+                                            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                                backgroundColor: 'rgba(20, 184, 166, 0.5)',
+                                            },
+                                            '& .MuiSwitch-switchBase': {
+                                                '&:hover': {
+                                                    backgroundColor: 'rgba(0, 0, 0, 0.08)',
+                                                },
+                                            },
+                                            '& .MuiSwitch-track': {
+                                                backgroundColor: '#d3d3d3', // Default background color
+                                            },
+                                        }}
+                                    />
+                                }
                                 label="Highlight the key points"
                                 sx={{
                                     '& .MuiFormControlLabel-label': {
                                         fontSize: '15px',
                                         fontWeight: 600,
                                         fontFamily: 'Manrope',
-                                        color: '#627067'
-                                    }
+                                        color: '#627067',
+                                    },
                                 }}
                             />
                             {supplement.overview && (
