@@ -2,7 +2,7 @@ const slugify = require('slugify');
 const LONG_CHAU_DOMAIN = 'nhathuoclongchau.com.vn';
 const LONG_CHAU_API = `https://api.${LONG_CHAU_DOMAIN}/lccus/search-product-service/api/products/ecom/product/search`;
 
-async function getLongChauResults(supplement, count = 5, width = '1080', quality = '90') {
+export const getLongChauResults = async (supplement, count = 5, width = '1080', quality = '90') => {
     const results = await fetch(LONG_CHAU_API, {
         method: 'POST',
         headers: {
@@ -44,6 +44,6 @@ async function getLongChauResults(supplement, count = 5, width = '1080', quality
 }
 
 // Use this function to get test results
-getLongChauResults('sắt').then((results) => {
-    console.log(results);
-});
+// getLongChauResults('sắt').then((results) => {
+//     console.log(results);
+// });
