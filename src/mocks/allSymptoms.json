@@ -19,5 +19,7 @@
     { "id": 17, "name": "Colon Cancer Screening" },
     { "id": 18, "name": "Ankle Pain" },
     { "id": 19, "name": "Foot Pain" },
-    { "id": 20, "name": "Hip Pain" }
+    { "id": 20, "name": "Hip Pain" },
+    { "id": 21, "name": "skin" },
+    {"id": 22, "name": "general"}
 ]

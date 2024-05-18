@@ -1,9 +1,9 @@
 .wrapper {
     padding: 16px 8px 0;
-
     display: flex;
     flex-direction: column;
     gap: 8px;
+    overflow-y: overlay;
 }
 
 .search-container {
@@ -32,7 +32,30 @@
         font-size: 1.6rem;
     }
     .close-icon {
-        padding-right: 10px;
+        padding-right: 12px;
         color: #475569;
+    }
+}
+.loading-icon {
+    position: absolute;
+    left: 72%;
+    top: 14%;
+    color: #475569;
+    animation: spinner 0.8s linear infinite;
+}
+
+.search-result{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: scroll;
+}
+
+@keyframes spinner {
+    from {
+        transform: translateY(-50%) rotate(0);
+    }
+    to {
+        transform: translateY(-50%) rotate(360deg);
     }
 }

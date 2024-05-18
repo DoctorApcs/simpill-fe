@@ -53,9 +53,10 @@
     font-size: 1.6rem;
     border-radius: 8px;
     padding: 16px 28px;
+    margin-bottom: 10px;
 }
 .disabled-link {
     pointer-events: none;
     cursor: default;
-    opacity: 0.8;
+    opacity: 0.6;
 }

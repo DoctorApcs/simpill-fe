@@ -77,7 +77,7 @@ function SupplementList() {
                         <h5 style={{ fontWeight: 800, fontSize: '16px' }}>All Results</h5>
                     </div>
                     {fakeAPIVitamins.map((vitamin, index) => (
-                        <NavLink to={`${config.routes.supplement}${vitamin.name}`} key={index}>
+                        <NavLink to={`${config.routes.supplement}${vitamin.name.toLowerCase()}`} key={index}>
                             <Button
                                 key={index}
                                 style={{

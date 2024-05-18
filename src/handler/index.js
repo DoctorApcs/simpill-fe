@@ -60,3 +60,7 @@ export const findAreaIdByBodyPartId = (bodyPartId) => {
     }
     return -1;
 };
+
+// export const getSymptomListBy = (areaName) => {
+//     return symptomIdsByArea.find((areaSymptom) => areaSymptom.id === areaId).symptomIds;
+// }

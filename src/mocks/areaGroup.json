@@ -1,22 +1,30 @@
 [
     {
         "id": "0",
-        "areaIds": [0, 1, 2]
+        "areaIds": [0]
     },
     {
         "id": "1",
-        "areaIds": [3]
+        "areaIds": [1]
     },
     {
         "id": "2",
-        "areaIds": [4]
+        "areaIds": [2,3,4]
     },
     {
-        "id": "3",
+        "id": "5",
         "areaIds": [5]
     },
     {
-        "id": "4",
+        "id": "6",
         "areaIds": [6]
+    },
+    {
+        "id": "7",
+        "areaIds": [7]
+    },
+    {
+        "id": "8",
+        "areaIds": [8]
     }
 ]
