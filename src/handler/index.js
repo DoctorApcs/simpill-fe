@@ -40,8 +40,12 @@ export const findAreaGroupByAreaId = (areaId) => {
     return areaGroup.find((group) => group.areaIds.includes(areaId));
 };
 
-export const findNameByAreaId = (areaId) => {
+export const findAreaNameByAreaId = (areaId) => {
     return bodyAreas.find((area) => area.id === areaId).name;
+};
+
+export const findSymptomNameBySymptomId = (symptomId) => {
+    return allSymptoms.find((symptom) => symptom.id === symptomId).name;
 };
 
 export const findSymptomIdsByAreaId = (areaId) => {
@@ -56,3 +60,7 @@ export const findAreaIdByBodyPartId = (bodyPartId) => {
     }
     return -1;
 };
+
+// export const getSymptomListBy = (areaName) => {
+//     return symptomIdsByArea.find((areaSymptom) => areaSymptom.id === areaId).symptomIds;
+// }

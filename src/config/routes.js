@@ -3,7 +3,7 @@ const routes = {
     bodymap: '/bodymap',
     supplements: '/supplements',
     supplement: '/supplements/:name',
-    drug: '/drug/:name',
+    drug: '/drug/',
 };
 
 export default routes;

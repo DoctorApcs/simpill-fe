@@ -6,11 +6,15 @@ import BodyPart from './BodyPart';
 import BodyContainer from './BodyContainer';
 import { Button, Container } from 'react-bootstrap';
 import SymptomList from './SymptomList';
-import Loading from '../Loading';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { getBodyAreas, getBodyParts, findAreaGroupByAreaId, findAreaIdByBodyPartId } from '~/handler';
 import Header from '~/layouts/components/Header';
+import { NavLink } from 'react-router-dom';
+import config from '~/config';
+import * as symptomsService from '~/services/symptomsService';
+import * as supplementService from '~/services/supplementService';
+import requests from '~/utils/routes';
 
 const cx = classNames.bind(style);
 function BodyMap() {
@@ -21,8 +25,6 @@ function BodyMap() {
     const [areaHoveredIdx, setAreaHoveredIdx] = useState(-1);
     //state for showing symptom list
     const [showSymptomList, setShowSymptomList] = useState(false);
-    //state for loading
-    const [isLoading, setLoading] = useState(false);
     //get ref for symptom list and body area buttons
     const symptomListRef = useRef(null);
     const bodyAreaButtonsRef = useRef(null);
@@ -35,6 +37,7 @@ function BodyMap() {
     const antBodyParts = useMemo(() => {
         return getBodyParts().filter(({ face }) => face === 'ant');
     }, []);
+
     const bodyAreas = useMemo(() => {
         return getBodyAreas();
     }, []);
@@ -45,22 +48,22 @@ function BodyMap() {
             selectedAreaIdxList.push(selectedSymptom.areaId);
         }
         setAreaIdxList(selectedAreaIdxList);
-    }, [selectedSymptoms, areaIdx]);
+    }, [selectedSymptoms]);
+
     const getFill = useCallback(
         (bodyPartId) => {
             if (areaIdx !== -1) {
-                if (bodyAreas[areaIdx].bodyPartIds.includes(bodyPartId)) return '#F44F5E';
+                if (bodyAreas[areaIdx]?.bodyPartIds.includes(bodyPartId)) return '#F44F5E';
             }
             for (const areaId of areaIdxList) {
-                if (bodyAreas[areaId].bodyPartIds.includes(bodyPartId)) return '#F44F5E';
+                if (bodyAreas[areaId]?.bodyPartIds.includes(bodyPartId)) return '#F44F5E';
             }
             if (areaHoveredIdx !== -1) {
-                if (bodyAreas[areaHoveredIdx].bodyPartIds.includes(bodyPartId)) return '#E8ECF1';
+                if (bodyAreas[areaHoveredIdx]?.bodyPartIds.includes(bodyPartId)) return '#E8ECF1';
             }
             return '#CBD5E1';
         },
         [bodyAreas, areaHoveredIdx, areaIdxList, areaIdx],
- 
     );
 
     // Handle click and hover events
@@ -82,6 +85,7 @@ function BodyMap() {
     // Set area index when clicked or hovered
     useEffect(() => {
         const areaIndex = findAreaIdByBodyPartId(clicked);
+        console.log(areaIndex);
         setAreaIdx(areaIndex);
         bodyAreaButtonsRef.current.children[areaIndex]?.scrollIntoView({
             behaivor: 'smooth',
@@ -93,33 +97,30 @@ function BodyMap() {
         setAreaHoveredIdx(areaHoveredIndex);
     }, [hovered]);
 
-    // Close symptom list when clicked outside
-    // useEffect(() => {
-    //     const handleClickOutside = (event) => {
-    //         if (symptomListRef.current && !symptomListRef.current.dialog?.contains(event.target)) {
-    //             if (selectedSymptoms.includes((selectedSymptom) => selectedSymptom.areaId !== areaIdx)) {
-    //                 setAreaIdx(-1);
-    //             }
-    //         }
-    //     };
-    //     document.addEventListener('mousedown', handleClickOutside);
-
-    //     return () => {
-    //         document.removeEventListener('mousedown', handleClickOutside);
-    //     };
-    // }, []);
-
     const handleClickAreaButton = (index) => {
         setShowSymptomList(true);
         setAreaIdx(index);
     };
 
-    const handleSubmit = () => {
-        setLoading(true);
-    };
+    useEffect(() => {
+        if(!showSymptomList) {
+            setAreaIdx(-1);
+            setClicked(null);
+        }
+    }, [showSymptomList]);
 
-    if (isLoading) return <Loading />;
-
+    useEffect(() => {
+        const fetchApi = async () => {
+            const symptomList = await symptomsService.symptomList(requests.symptomList);
+            console.log(symptomList);
+        }
+        const fetchApi1 = async () => {
+            const supplement = await supplementService.supplement('vitamin a');
+            console.log(supplement);
+        }
+        fetchApi1();
+        fetchApi();
+    }, []);
     return (
         <Container className="d-inline-flex flex-column justify-content-center" style={{ gap: '20px' }}>
             <Header pageNumb={0} />
@@ -141,22 +142,6 @@ function BodyMap() {
                         />
                     ))}
                 </BodyContainer>
-                {/* <div>
-                    <p>{txt[2]}</p>
-                    <BodyContainer>
-                        {postBodyPart.map((bodyPart, index) => (
-                            <BodyPart
-                                key={index}
-                                id={bodyPart.id}
-                                d={bodyPart.d}
-                                fill={getFill(bodyPart.id)}
-                                onClick={handleClick}
-                                onMouseEnter={handleMouseEnter}
-                                onMouseLeave={handleMouseLeave}
-                            />
-                       ))}
-                    </BodyContainer>
-                </div> */}
             </div>
             <div className={cx('button-row')} ref={bodyAreaButtonsRef}>
                 {bodyAreas.map((area, index) => (
@@ -180,32 +165,22 @@ function BodyMap() {
                 <SymptomList
                     ref={symptomListRef}
                     areaId={areaIdx}
-                    showSymptomList={showSymptomList}
                     areaGroup={findAreaGroupByAreaId(areaIdx)}
-                    setClicked={setClicked}
-                    setAreaIdx={setAreaIdx}
                     selectedSymptoms={selectedSymptoms}
                     setSelectedSymptoms={setSelectedSymptoms}
+                    showSymptomList={showSymptomList}
                     setShowSymptomList={setShowSymptomList}
                 />
             ) : (
                 ''
             )}
-            <Button
-                disabled={selectedSymptoms.length === 0}
-                onClick={handleSubmit}
-                style={{
-                    margin: '8px',
-                    padding: '16px 28px',
-                    borderColor: '#1e293b',
-                    fontWeight: 700,
-                    fontSize: '16px',
-                    backgroundColor: '#1e293b',
-                }}
+            <NavLink
+                to={selectedSymptoms.length === 0 ? '#' : config.routes.supplements}
+                className={cx('submit-button', `${selectedSymptoms.length === 0 ? 'disabled-link' : ''}`)}
             >
                 Submit
                 <FontAwesomeIcon style={{ paddingLeft: '10px' }} icon={faCheck} />
-            </Button>
+            </NavLink>
         </Container>
     );
 }
