@@ -42,20 +42,19 @@ function Header({ showBackButton, to, pageNumb, breadCrumbName = '' }) {
         <header className={cx('wrapper', `${isScroll ? 'white-header' : ''}`)}>
             <div className={cx('container')}>
                 {showBackButton && (
-                    <NavLink to={to} className={cx('back-button')}>
-                        <Button
-                            style={{
-                                padding: '12px 18px',
-                                borderRadius: '14px',
-                                fontSize: '18px',
-                                backgroundColor: '#f1f5f9',
-                                color: '#000',
-                                borderColor: '#f1f5f9',
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faAngleLeft} />
-                        </Button>
-                    </NavLink>
+                    <Button
+                        style={{
+                            padding: '12px 18px',
+                            borderRadius: '14px',
+                            fontSize: '18px',
+                            backgroundColor: '#f1f5f9',
+                            color: '#000',
+                            borderColor: '#f1f5f9',
+                        }}
+                        onClick={() => window.history.back()}
+                    >
+                        <FontAwesomeIcon icon={faAngleLeft} />
+                    </Button>
                 )}
                 <div className={cx('breadcrumb')}>
                     {breadcrumb.slice(0, pageNumb + 1).map((item, index) => (
