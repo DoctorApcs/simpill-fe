@@ -104,7 +104,7 @@ function Supplement() {
         width: '50%',
         zIndex: 0,
         borderRadius: 'inherit',
-        transition: 'transform 0.2s',
+        transition: `transform ${animationDelay}ms`,
         fontSize: '14px',
         padding: '8px 12px',
         left: '4px'
@@ -121,7 +121,7 @@ function Supplement() {
 
     const navItemTextDefaultStyle = {
         zIndex: 1,
-        transition: 'color 0.2s',
+        transition: `color ${animationDelay}ms`,
     };
 
     const navItemTextTransitionStyle = {
