@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react';
 import SymptomsTable from '~/components/SymptomsTable';
 import { useSelector } from 'react-redux';
 import * as suggestionService from '~/services/suggestionService';
-import { findSymptomListBySymptomIds } from '~/handler';
+import { findAreaNameByAreaId, findSymptomListBySymptomIds } from '~/handler';
 
 // Fake api data vitamins
 const fakeAPIVitamins = Array.from({ length: 5 }, (_, i) => ({
@@ -22,9 +22,11 @@ const fakeAPIVitamins = Array.from({ length: 5 }, (_, i) => ({
 }));
 const cx = classNames.bind(style);
 function SupplementList() {
+    const [supplementList, setSupplementList] = useState([]);
     const isLoading = useSelector((state) => state.loading.isLoading);
     const [openTable, setOpenTable] = useState(false);
     const selectedSymptoms = JSON.parse(localStorage.getItem('selectedSymptoms')).symptoms;
+
     useEffect(() => {
         if (isLoading) {
             document.body.style.backgroundColor = 'rgb(204, 251, 241)';
@@ -35,13 +37,15 @@ function SupplementList() {
     }, [isLoading]);
 
     useEffect(() => {
-        const fetchAPI = async (symptomName) => {
+        const fetchAPI = async (symptomName, areaId) => {
             const result = await suggestionService.suggestionList(symptomName);
-            console.log(result);
+            if(result !== null) {
+                setSupplementList([...supplementList, { areaId: areaId, supplements: result }])
+            }
         }
-        selectedSymptoms.map((symptomList) => {
-            const symptom = findSymptomListBySymptomIds(symptomList.symptomIds)
-            fetchAPI(symptom);
+        selectedSymptoms.map((selectedSymptom) => {
+            const symptom = findSymptomListBySymptomIds(selectedSymptom.symptomIds)
+            fetchAPI(symptom, selectedSymptom.areaId);
         })
     }, []);
     return isLoading ? (
@@ -83,41 +87,44 @@ function SupplementList() {
                 }}
             >
                 <div className={cx('vitamin-list')}>
-                    <div>
-                        <h5 style={{ fontWeight: 800, fontSize: '16px' }}>All Results</h5>
-                    </div>
-                    {fakeAPIVitamins.map((vitamin, index) => (
-                        <NavLink to={`${config.routes.supplement.replace(':name', vitamin.name.toLowerCase())}`} key={index}>
-                            <Button
-                                key={index}
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    width: '100%',
-                                    height: '100px',
-                                    padding: '0 24px',
-                                    backgroundColor: '#f1f5f9',
-                                    borderColor: '#f1f5f9',
-                                    borderRadius: '24px',
-                                    color: '#000',
-                                    fontSize: '18px',
-                                    fontWeight: 800,
-                                }}
-                            >
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        width: '100%',
-                                        flexDirection: 'column',
-                                        gap: '12px',
-                                        alignItems: 'flex-start',
-                                    }}
-                                >
-                                    {vitamin.name}
-                                </div>
-                                <FontAwesomeIcon icon={faAngleRight} style={{ float: 'right' }} />
-                            </Button>
-                        </NavLink>
+                    {supplementList.map((supplements, index) => (
+                        <div className={cx('vitamin-list')} key={index}>
+                            <h5 style={{ fontWeight: 800, fontSize: '16px' }}>Results for {findAreaNameByAreaId(supplements.areaId)}</h5>
+                            {supplements.supplements.map((supplement, index) => (
+                                <NavLink to={`${config.routes.supplement.replace(':name', supplement.name.toLowerCase())}`} key={index}>
+                                    <Button
+                                        key={index}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            width: '100%',
+                                            height: '100px',
+                                            padding: '0 24px',
+                                            backgroundColor: '#f1f5f9',
+                                            borderColor: '#f1f5f9',
+                                            borderRadius: '24px',
+                                            color: '#000',
+                                            fontSize: '18px',
+                                            fontWeight: 800,
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                width: '100%',
+                                                flexDirection: 'column',
+                                                gap: '12px',
+                                                alignItems: 'flex-start',
+                                            }}
+                                        >
+                                            {supplement.name}
+                                        </div>
+                                        <FontAwesomeIcon icon={faAngleRight} style={{ float: 'right' }} />
+                                    </Button>
+                                </NavLink>
+                            ))}
+                        </div>
+                    
                     ))}
                 </div>
             </div>
