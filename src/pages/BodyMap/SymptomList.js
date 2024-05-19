@@ -66,7 +66,7 @@ const SymptomList = forwardRef(
                         if (activeSymptomsByAreaId.symptoms.length === 0) {
                             prev.splice(i, 1);
                         } else {
-                            prev[i] = { areaId: selectedKey, symptoms: activeSymptomsByAreaId.symptoms };
+                            prev[i] = { areaId: selectedKey, symptomIds: activeSymptomsByAreaId.symptoms };
                         }
                         return [...prev];
                     });

@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import style from './FruitDrugList.module.scss';
+import style from './DrugList.module.scss';
 
 import { Container } from 'react-bootstrap';
 import ProductCard from '~/components/ProductCard';
@@ -45,7 +45,7 @@ const fakeProduct = [
 ];
 
 const cx = classNames.bind(style);
-function FruitDrugList() {
+function DrugList() {
     return (
         <Container className="d-flex flex-column" style={{ gap: '16px' }}>
             <div>
@@ -66,4 +66,4 @@ function FruitDrugList() {
     );
 }
 
-export default FruitDrugList;
+export default DrugList;

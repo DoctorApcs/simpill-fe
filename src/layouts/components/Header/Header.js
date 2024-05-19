@@ -24,7 +24,7 @@ const breadcrumb = [
         to: config.routes.supplement,
     },
 ];
-function Header({ showBackButton, to, pageNumb, breadCrumbName = '' }) {
+function Header({ showBackButton, pageNumb, breadCrumbName = '' }) {
     const [isScroll, setIsScroll] = useState(false);
     const [showSearchBox, setShowSearchBox] = useState(false);
 
@@ -43,6 +43,7 @@ function Header({ showBackButton, to, pageNumb, breadCrumbName = '' }) {
             <div className={cx('container')}>
                 {showBackButton && (
                     <Button
+                        bsPrefix={cx('back-button')}
                         style={{
                             padding: '12px 18px',
                             borderRadius: '14px',

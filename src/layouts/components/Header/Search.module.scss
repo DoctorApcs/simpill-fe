@@ -37,9 +37,8 @@
     }
 }
 .loading-icon {
-    position: absolute;
-    left: 72%;
-    top: 14%;
+    margin-top: 12px;
+    margin-right: 12px;
     color: #475569;
     animation: spinner 0.8s linear infinite;
 }

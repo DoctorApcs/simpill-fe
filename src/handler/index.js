@@ -1,8 +1,9 @@
 import bodyParts from '../mocks/bodyParts.json';
 import bodyAreas from '../mocks/bodyAreas.json';
-import allSymptoms from '../mocks/allSymptoms.json';
-import symptomIdsByArea from '../mocks/symptomIdsByArea.json';
 import areaGroup from '../mocks/areaGroup.json';
+
+const allSymptoms = [];
+const symptomIdsByArea = [];
 
 export const getBodyParts = () => {
     return bodyParts;
@@ -14,10 +15,6 @@ export const getBodyAreas = () => {
 
 export const getAllSymptoms = () => {
     return allSymptoms;
-};
-
-export const getSymptomIdsByArea = () => {
-    return symptomIdsByArea;
 };
 
 export const findSymptomListByAreaId = (areaID) => {
@@ -61,6 +58,21 @@ export const findAreaIdByBodyPartId = (bodyPartId) => {
     return -1;
 };
 
-// export const getSymptomListBy = (areaName) => {
-//     return symptomIdsByArea.find((areaSymptom) => areaSymptom.id === areaId).symptomIds;
-// }
+export const handleAPI = (symptomList) => {
+    let symptomId = 0;
+    let areaId = 0;
+    for( const bodyArea of bodyAreas) {
+        for(const bodyPart of symptomList) {
+            if(bodyArea.name === bodyPart.bodyPart) {
+                const symptomIds = [];
+                for(const symptom of bodyPart.symptoms) {
+                   allSymptoms.push({ id: symptomId, name: symptom });
+                    symptomIds.push(symptomId);
+                    symptomId++;
+                }
+                symptomIdsByArea.push({ id: areaId, symptomIds: symptomIds });
+                areaId++;
+            }
+        }
+    }
+}
