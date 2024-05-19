@@ -12,6 +12,8 @@ import Loading from '../Loading';
 import { useEffect, useState } from 'react';
 import SymptomsTable from '~/components/SymptomsTable';
 import { useSelector } from 'react-redux';
+import * as suggestionService from '~/services/suggestionService';
+import { findSymptomListBySymptomIds } from '~/handler';
 
 // Fake api data vitamins
 const fakeAPIVitamins = Array.from({ length: 5 }, (_, i) => ({
@@ -32,6 +34,16 @@ function SupplementList() {
         };
     }, [isLoading]);
 
+    useEffect(() => {
+        const fetchAPI = async (symptomName) => {
+            const result = await suggestionService.suggestionList(symptomName);
+            console.log(result);
+        }
+        selectedSymptoms.map((symptomList) => {
+            const symptom = findSymptomListBySymptomIds(symptomList.symptomIds)
+            fetchAPI(symptom);
+        })
+    }, []);
     return isLoading ? (
         <Loading />
     ) : (

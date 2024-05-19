@@ -5,7 +5,7 @@ const TTL=60*60*1000; // 1 hour
 
 export const symptomList = async () => {
     let symptomListLocal=JSON.parse(sessionStorage.getItem("symptomList"));
-    if(symptomListLocal!==undefined || Date.now() > symptomListLocal.expiration) {
+    if(!symptomListLocal || Date.now() > symptomListLocal.expiration) {
         try {
             const symptomList = await httpRequest.get(requests.symptomList);
             sessionStorage.setItem("symptomList", JSON.stringify({

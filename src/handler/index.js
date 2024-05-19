@@ -2,8 +2,14 @@ import bodyParts from '../mocks/bodyParts.json';
 import bodyAreas from '../mocks/bodyAreas.json';
 import areaGroup from '../mocks/areaGroup.json';
 
-const allSymptoms = [];
-const symptomIdsByArea = [];
+const saveToSessionStorage = (key, value) => {
+    sessionStorage.setItem(key, JSON.stringify(value));
+};
+
+const loadFromSessionStorage = (key) => {
+    return JSON.parse(sessionStorage.getItem(key));
+
+}
 
 export const getBodyParts = () => {
     return bodyParts;
@@ -14,13 +20,15 @@ export const getBodyAreas = () => {
 };
 
 export const getAllSymptoms = () => {
-    return allSymptoms;
+    return loadFromSessionStorage('allSymptoms');
 };
 
 export const findSymptomListByAreaId = (areaID) => {
-    const symptomObject = symptomIdsByArea.find((areaSymptom) => areaSymptom.id === areaID);
+    const allSymptoms = loadFromSessionStorage('allSymptoms');
+    const symptomIdsByArea = loadFromSessionStorage('symptomIdsByArea');
+    const symptomObject = symptomIdsByArea?.find((areaSymptom) => areaSymptom.id === areaID);
     const symptomList = symptomObject.symptomIds.map((symptomId) =>
-        allSymptoms.find((symptom) => symptom.id === symptomId),
+    allSymptoms.find((symptom) => symptom.id === symptomId),
     );
     return symptomList;
 };
@@ -42,10 +50,21 @@ export const findAreaNameByAreaId = (areaId) => {
 };
 
 export const findSymptomNameBySymptomId = (symptomId) => {
+    const allSymptoms = loadFromSessionStorage('allSymptoms');
     return allSymptoms.find((symptom) => symptom.id === symptomId).name;
 };
 
+export const findSymptomListBySymptomIds = (symptomIds) => {
+    let symptomsName = '';
+    symptomIds.map((symptomId) => {
+        const name = findSymptomNameBySymptomId(symptomId);
+        symptomsName=symptomsName.concat(" ", name.toLowerCase());
+    })
+    return symptomsName
+}
+
 export const findSymptomIdsByAreaId = (areaId) => {
+    const symptomIdsByArea = loadFromSessionStorage('symptomIdsByArea');
     return symptomIdsByArea.find((areaSymptom) => areaSymptom.id === areaId).symptomIds;
 };
 
@@ -59,6 +78,8 @@ export const findAreaIdByBodyPartId = (bodyPartId) => {
 };
 
 export const handleAPI = (symptomList) => {
+    const allSymptoms = [];
+    const symptomIdsByArea = [];
     let symptomId = 0;
     let areaId = 0;
     for( const bodyArea of bodyAreas) {
@@ -66,7 +87,7 @@ export const handleAPI = (symptomList) => {
             if(bodyArea.name === bodyPart.bodyPart) {
                 const symptomIds = [];
                 for(const symptom of bodyPart.symptoms) {
-                   allSymptoms.push({ id: symptomId, name: symptom });
+                    allSymptoms.push({ id: symptomId, name: symptom });
                     symptomIds.push(symptomId);
                     symptomId++;
                 }
@@ -75,4 +96,6 @@ export const handleAPI = (symptomList) => {
             }
         }
     }
+    saveToSessionStorage('allSymptoms', allSymptoms);
+    saveToSessionStorage('symptomIdsByArea', symptomIdsByArea);
 }

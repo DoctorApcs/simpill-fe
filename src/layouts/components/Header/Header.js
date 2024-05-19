@@ -18,11 +18,7 @@ const breadcrumb = [
     {
         name: 'Supplements',
         to: config.routes.supplements,
-    },
-    {
-        name: '',
-        to: config.routes.supplement,
-    },
+    }
 ];
 function Header({ showBackButton, pageNumb, breadCrumbName = '' }) {
     const [isScroll, setIsScroll] = useState(false);
@@ -58,11 +54,17 @@ function Header({ showBackButton, pageNumb, breadCrumbName = '' }) {
                     </Button>
                 )}
                 <div className={cx('breadcrumb')}>
-                    {breadcrumb.slice(0, pageNumb + 1).map((item, index) => (
-                        <NavLink key={index} to={item.to} className={cx('breadcrumb-item')}>
-                            {item.name ? item.name : breadCrumbName}
-                        </NavLink>
-                    ))}
+                    {breadCrumbName ? (
+                        <div  className={cx('breadcrumb-item')}>
+                            {breadCrumbName}
+                        </div>
+                    ) : (
+                        breadcrumb.slice(0, pageNumb + 1).map((item, index) => (
+                            <NavLink key={index} to={item.to} className={cx('breadcrumb-item')}>
+                                {item.name}
+                            </NavLink>
+                        ))
+                    )}
                 </div>
                 <Button
                     style={{

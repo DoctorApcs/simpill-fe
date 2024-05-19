@@ -2,15 +2,26 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 150px;
     flex-shrink: 0;
+    width: 18vh;
+    height: 36vh;
     margin: 10px;
-    border-radius: 14px;
+    border-radius: 16px;
 }
 .info {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    margin-top: 16px;
+    height: 100%;
+    justify-content: space-evenly;
+    gap: 8px;
     padding: 0 12px;
+}
+.unit {
+    display: flex;
+    justify-content: center;
+    border: var(--primary) 2px solid;
+    color: var(--black);
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 50px;
 }

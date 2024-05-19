@@ -38,9 +38,14 @@ export const drugs = async (supplement, count = 5, width = '1080', quality = '90
                 locale: 'vi',
             }),
             image: product.image.replace('unsafe/', `unsafe/${width}x0/filters:quality(${quality})/`),
-            url: `https://${LONG_CHAU_DOMAIN}/${product.slug}`
+            url: `https://${LONG_CHAU_DOMAIN}/${product.slug}`,
+            specification: product.specification,
+            price: product.price.price || product.prices.filter(price => price.measureUnitName !== 'Vỉ' || price.measureUnitName !== 'Viên')[0].price,
         }
     ));
 }
 
-console.log(drugs('Vitamin A')); // should return a list of Vitamin A products
+// Use this function to get test results
+// getLongChauResults('sắt').then((results) => {
+//     console.log(results);
+// });

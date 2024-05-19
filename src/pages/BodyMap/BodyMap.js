@@ -14,7 +14,6 @@ import { NavLink } from 'react-router-dom';
 import config from '~/config';
 import * as symptomsService from '~/services/symptomsService';
 import requests from '~/utils/routes';
-import * as drugsService from '~/services/drugsService';
 
 const cx = classNames.bind(style);
 function BodyMap() {
