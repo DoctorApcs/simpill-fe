@@ -45,7 +45,7 @@ export const drugs = async (supplement, count = 5, width = '1080', quality = '90
     ));
 }
 
-// Use this function to get test results
-// getLongChauResults('sắt').then((results) => {
+//Use this function to get test results
+// getLongChauResults('canxi', 10).then((results) => {
 //     console.log(results);
 // });
