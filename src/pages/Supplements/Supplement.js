@@ -2,9 +2,10 @@ import classNames from 'classnames/bind';
 import style from './Supplement.module.scss';
 
 import { Nav, Tab, TabPane } from 'react-bootstrap';
+import { Transition } from 'react-transition-group';
 import images from '~/assets/images';
 import InfoTag from '~/components/InfoTag';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import FruitDrugList from '~/pages/Fruits&Drugs/FruitDrugList';
 import ProductLayout from '~/components/ProductLayout';
 import Uses from '~/components/InfoTag/Uses';
@@ -88,7 +89,46 @@ function Supplement() {
     const [activeId, setActiveId] = useState(0);
 
     const handleSelect = (key) => {
-        setActiveId(Number(key));
+        setTimeout(() => {
+            setActiveId(Number(key));
+        });
+    };
+
+    const animationDelay = 100; // ms
+
+    const sliderRef = useRef(null);
+
+    const sliderDefaultStyle = {
+        position: 'absolute',
+        backgroundColor: '#14b8a6',
+        width: '50%',
+        zIndex: 0,
+        borderRadius: 'inherit',
+        transition: 'transform 0.2s',
+        fontSize: '14px',
+        padding: '8px 12px',
+        left: '4px'
+    }
+
+    const sliderTransitionStyle = {
+        entering: { transform: 'translateX(0)' },
+        entered: { transform: 'translateX(100%)' },
+        exiting: { transform: 'translateX(100%)' },
+        exited: { transform: 'translateX(0)' },
+    };
+
+    const navItemTextRef = useRef(null);
+
+    const navItemTextDefaultStyle = {
+        zIndex: 1,
+        transition: 'color 0.2s',
+    };
+
+    const navItemTextTransitionStyle = {
+        entering: { color: '#fff' },
+        entered: { color: '#fff' },
+        exiting: { color: '#475569' },
+        exited: { color: '#475569' },
     };
 
     return (
@@ -102,14 +142,29 @@ function Supplement() {
                                 bsPrefix={cx('nav-item')}
                                 active={index === activeId}
                                 eventKey={index}
-                                style={{
-                                    backgroundColor: activeId === index ? '#14b8a6' : 'transparent',
-                                    color: activeId === index ? '#fff' : '#475569',
-                                }}
                             >
-                                <Nav.Item>{item.name}</Nav.Item>
+                                <Transition nodeRef={navItemTextRef} in={index === activeId} timeout={animationDelay}>
+                                    {state => (
+                                        <Nav.Item ref={navItemTextRef} style={{
+                                            ...navItemTextDefaultStyle,
+                                            ...navItemTextTransitionStyle[state],
+                                        }}>{item.name}</Nav.Item>
+                                    )}
+                                </Transition>
                             </Nav.Link>
                         ))}
+                        <Transition nodeRef={sliderRef} in={activeId} timeout={animationDelay}>
+                            {state => (
+                                <div
+                                    ref={sliderRef}
+                                    style={{
+                                        ...sliderDefaultStyle,
+                                        ...sliderTransitionStyle[state],
+                                    }}
+                                ><wbr/>
+                                </div>
+                            )}
+                        </Transition>
                     </div>
                 </Nav>
                 <Tab.Content>
