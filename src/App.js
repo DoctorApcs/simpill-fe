@@ -4,33 +4,37 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss';
 import DefaultLayout from '~/layouts/DefaultLayout';
 import { Fragment } from 'react';
+import { Provider } from 'react-redux';
+import { store } from './redux';
 
 function App() {
     return (
-        <Router>
-            <div className="App">
-                <Routes>
-                    {publicRoutes.map((route, index) => {
-                        const Page = route.component;
-                        let Layout = DefaultLayout;
-                        if (route.layout === null) {
-                            Layout = Fragment;
-                        }
-                        return (
-                            <Route
-                                key={index}
-                                path={route.path}
-                                element={
-                                    <Layout>
-                                        <Page />
-                                    </Layout>
-                                }
-                            />
-                        );
-                    })}
-                </Routes>
-            </div>
-        </Router>
+        <Provider store={store}>
+            <Router>
+                <div className="App">
+                    <Routes>
+                        {publicRoutes.map((route, index) => {
+                            const Page = route.component;
+                            let Layout = DefaultLayout;
+                            if (route.layout === null) {
+                                Layout = Fragment;
+                            }
+                            return (
+                                <Route
+                                    key={index}
+                                    path={route.path}
+                                    element={
+                                        <Layout>
+                                            <Page />
+                                        </Layout>
+                                    }
+                                />
+                            );
+                        })}
+                    </Routes>
+                </div>
+            </Router>
+        </Provider>
     );
 }
 

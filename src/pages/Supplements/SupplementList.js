@@ -11,6 +11,7 @@ import Header from '~/layouts/components/Header';
 import Loading from '../Loading';
 import { useEffect, useState } from 'react';
 import SymptomsTable from '~/components/SymptomsTable';
+import { useSelector } from 'react-redux';
 
 // Fake api data vitamins
 const fakeAPIVitamins = Array.from({ length: 5 }, (_, i) => ({
@@ -19,24 +20,21 @@ const fakeAPIVitamins = Array.from({ length: 5 }, (_, i) => ({
 }));
 const cx = classNames.bind(style);
 function SupplementList() {
-    const [loading, setLoading] = useState(true);
+    const isLoading = useSelector((state) => state.loading.isLoading);
     const [openTable, setOpenTable] = useState(false);
     const selectedSymptoms = JSON.parse(localStorage.getItem('selectedSymptoms')).symptoms;
     useEffect(() => {
-        if (loading) {
+        if (isLoading) {
             document.body.style.backgroundColor = 'rgb(204, 251, 241)';
         }
-        setTimeout(() => {
-            setLoading(false);
-        }, 3000);
         return () => {
             document.body.style.backgroundColor = 'white';
-            clearTimeout();
         };
-    }, [loading]);
+    }, [isLoading]);
 
-    if (loading) return <Loading />;
-    return (
+    return isLoading ? (
+        <Loading />
+    ) : (
         <Container className={cx('container')}>
             <Header showBackButton={true} to={config.routes.bodymap} pageNumb={1} />
             <div>
@@ -77,7 +75,7 @@ function SupplementList() {
                         <h5 style={{ fontWeight: 800, fontSize: '16px' }}>All Results</h5>
                     </div>
                     {fakeAPIVitamins.map((vitamin, index) => (
-                        <NavLink to={`${config.routes.supplement}${vitamin.name.toLowerCase()}`} key={index}>
+                        <NavLink to={`${config.routes.supplement.replace(':name', vitamin.name.toLowerCase())}`} key={index}>
                             <Button
                                 key={index}
                                 style={{
