@@ -1,7 +1,6 @@
 import classNames from 'classnames/bind';
 import style from './Supplement.module.scss';
 
-import { useState } from 'react';
 import { Nav, Tab, TabPane } from 'react-bootstrap';
 import { Transition } from 'react-transition-group';
 import images from '~/assets/images';
