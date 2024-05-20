@@ -45,28 +45,23 @@ function Supplement() {
     const [activeId, setActiveId] = useState(0);
     const [supplement, setSupplement] = useState({});
     const [isHighlighted, setIsHighlighted] = useState(false);
+    const [originalSupplement, setOriginalSupplement] = useState({});
     const { name } = useParams();
 
     const handleSwitch = async () => {
         if (isHighlighted) {
-            const overview = winkjsService.unhightLightText(supplement.overview);
-            supplement.overview = overview;
-
-            for (let i = 0; i < supplement.uses.length; i++) {
-                const text = winkjsService.unhightLightText(supplement.uses[i].uses);
-                supplement.uses[i].uses = text;
-            }
+            supplement.overview = originalSupplement.overview;
+            supplement.uses = originalSupplement.uses;
         } else {
-            const overview = await winkjsService.highLightText(supplement.overview);
-            supplement.overview = overview;
+            supplement.overview = winkjsService.shortenText(originalSupplement.overview);
 
-            for (let i = 0; i < supplement.uses.length; i++) {
+            for (let i = 0; i < originalSupplement.uses.length; i++) {
                 const uses = extractLiValues(supplement.uses[i].uses);
-                console.log(uses);
                 const highlightedUses = [];
                 for (let j = 0; j < uses.length; j++) {
-                    const highlightedText = await winkjsService.highLightText(uses[j], 0.95);
-                    highlightedUses.push(highlightedText);
+                    // only get the first 1 sentences
+                    const firstSentence = uses[j].split('.').slice(0, 1).join('.') + '.';
+                    highlightedUses.push(firstSentence)
                 }
                 supplement.uses[i].uses = concatLiValues(highlightedUses);
             }
@@ -78,7 +73,9 @@ function Supplement() {
     useEffect(() => {
         const fetchApi = async () => {
             const supplement = await supplementService.supplement(name);
-            setSupplement(supplement);
+            setOriginalSupplement(supplement);
+            // make a deep copy of the supplement object
+            setSupplement(JSON.parse(JSON.stringify(supplement)));
         };
         if (name !== '' && name !== undefined) {
             fetchApi();
@@ -193,7 +190,7 @@ function Supplement() {
                                         }}
                                     />
                                 }
-                                label="Highlight the key points"
+                                label="Only show the key points"
                                 sx={{
                                     '& .MuiFormControlLabel-label': {
                                         fontSize: '15px',
