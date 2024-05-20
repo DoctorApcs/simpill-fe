@@ -11,9 +11,10 @@ import Header from '~/layouts/components/Header';
 import Loading from '../Loading';
 import { useEffect, useState } from 'react';
 import SymptomsTable from '~/components/SymptomsTable';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import * as suggestionService from '~/services/suggestionService';
 import { findAreaNameByAreaId, findSymptomListBySymptomIds } from '~/handler';
+import { startLoading, stopLoading } from '~/redux/loadingSlice';
 
 // Fake api data vitamins
 const fakeAPIVitamins = Array.from({ length: 5 }, (_, i) => ({
@@ -23,9 +24,10 @@ const fakeAPIVitamins = Array.from({ length: 5 }, (_, i) => ({
 const cx = classNames.bind(style);
 function SupplementList() {
     const [supplementList, setSupplementList] = useState([]);
-    const isLoading = useSelector((state) => state.loading.isLoading);
+    const isLoading = useSelector((state) => state.loading);
     const [openTable, setOpenTable] = useState(false);
     const selectedSymptoms = JSON.parse(localStorage.getItem('selectedSymptoms')).symptoms;
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (isLoading) {
@@ -38,17 +40,19 @@ function SupplementList() {
 
     useEffect(() => {
         const fetchAPI = async (symptomName, areaId) => {
+            dispatch(startLoading());
             const result = await suggestionService.suggestionList(symptomName);
             if(result !== null) {
                 setSupplementList([...supplementList, { areaId: areaId, supplements: result }])
             }
+            dispatch(stopLoading());
         }
         selectedSymptoms.map((selectedSymptom) => {
             const symptom = findSymptomListBySymptomIds(selectedSymptom.symptomIds)
             fetchAPI(symptom, selectedSymptom.areaId);
         })
     }, []);
-    return isLoading ? (
+    return isLoading? (
         <Loading />
     ) : (
         <Container className={cx('container')}>
@@ -129,7 +133,7 @@ function SupplementList() {
                 </div>
             </div>
         </Container>
-    );
+    )
 }
 
 export default SupplementList;
