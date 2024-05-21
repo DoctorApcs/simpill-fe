@@ -4,6 +4,7 @@ import style from './ProductCard.module.scss';
 import { Card } from 'react-bootstrap';
 
 const cx = classNames.bind(style);
+
 function ProductCard({ product, onClick }) {
     const shorter = (string, size) => (string.length > size ? string.slice(0, size) + '...' : string);
     const parseStringPrice = (price) => price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');

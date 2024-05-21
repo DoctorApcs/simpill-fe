@@ -19,12 +19,12 @@ import * as winkjsService from '~/services/winkjsService';
 const cx = classNames.bind(style);
 const switchButton = [
     {
-        eventKey: 'details',
-        name: 'Details',
-    },
-    {
         eventKey: 'drugs',
         name: 'Drugs',
+    },
+    {
+        eventKey: 'details',
+        name: 'Details',
     },
 ];
 
@@ -136,7 +136,7 @@ function Supplement() {
                                 active={index === activeId}
                                 eventKey={index}
                             >
-                                <Transition nodeRef={navItemTextRef} in={index === activeId} timeout={animationDelay}>
+                                <Transition nodeRef={navItemTextRef} in={activeId === index } timeout={animationDelay}>
                                     {state => (
                                         <Nav.Item ref={navItemTextRef} style={{
                                             ...navItemTextDefaultStyle,
@@ -146,7 +146,7 @@ function Supplement() {
                                 </Transition>
                             </Nav.Link>
                         ))}
-                        <Transition nodeRef={sliderRef} in={activeId} timeout={animationDelay}>
+                        <Transition nodeRef={sliderRef} in={Boolean(activeId)} timeout={animationDelay}>
                             {state => (
                                 <div
                                     ref={sliderRef}
@@ -161,7 +161,10 @@ function Supplement() {
                     </div>
                 </Nav>
                 <Tab.Content>
-                    <Tab.Pane eventKey={0}>
+                    <TabPane eventKey={0}>
+                        <DrugList supplement={supplement.name}/>
+                    </TabPane>
+                    <Tab.Pane eventKey={1}>
                         <div className={cx('content')}>
                             <FormControlLabel
                                 control={
@@ -217,9 +220,6 @@ function Supplement() {
                             )} */}
                         </div>
                     </Tab.Pane>
-                    <TabPane eventKey={1}>
-                        <DrugList supplement={supplement.name}/>
-                    </TabPane>
                 </Tab.Content>
             </Tab.Container>
         </ProductLayout>

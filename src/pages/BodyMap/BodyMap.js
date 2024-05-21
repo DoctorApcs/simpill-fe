@@ -33,14 +33,18 @@ function BodyMap() {
     useEffect(() => {
         const fetchApi = async () => {
             const symptomList = await symptomsService.symptomList(requests.symptomList);
-            handleAPI(symptomList);
+            if(symptomList) {
+                handleAPI(symptomList);
+            }
         }
-        fetchApi();
+
+            fetchApi();
     }, []);
+
     // Get body parts and areas
     const [selectedSymptoms, setSelectedSymptoms] = useState(() => {
         // Try to get the initial state from local storage
-        const storedData = localStorage.getItem('selectedSymptoms');
+        const storedData = sessionStorage.getItem('selectedSymptoms');
         if (storedData) {
             const { timestamp, symptoms } = JSON.parse(storedData);
             const oneHour = 60*60*1000; // in milliseconds
@@ -57,7 +61,7 @@ function BodyMap() {
             timestamp: Date.now(), // Store a timestamp
             symptoms: selectedSymptoms,
         };
-        localStorage.setItem('selectedSymptoms', JSON.stringify(data));
+        sessionStorage.setItem('selectedSymptoms', JSON.stringify(data));
     }, [selectedSymptoms]);
 
     const antBodyParts = useMemo(() => {
