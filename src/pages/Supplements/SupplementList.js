@@ -14,6 +14,7 @@ import SymptomsTable from '~/components/SymptomsTable';
 import { useSelector } from 'react-redux';
 import * as suggestionService from '~/services/suggestionService';
 import { findAreaNameByAreaId, findSymptomListBySymptomIds } from '~/handler';
+import { useDebounce } from '~/hooks';
 
 // Fake api data vitamins
 const fakeAPIVitamins = Array.from({ length: 5 }, (_, i) => ({
@@ -25,7 +26,8 @@ function SupplementList() {
     const [supplementList, setSupplementList] = useState([]);
     const isLoading = useSelector((state) => state.loading.isLoading);
     const [openTable, setOpenTable] = useState(false);
-    const selectedSymptoms = JSON.parse(localStorage.getItem('selectedSymptoms')).symptoms;
+    const selectedSymptoms = JSON.parse(sessionStorage.getItem('selectedSymptoms')).symptoms;
+    
 
     useEffect(() => {
         if (isLoading) {
@@ -40,7 +42,7 @@ function SupplementList() {
         const fetchAPI = async (symptomName, areaId) => {
             const result = await suggestionService.suggestionList(symptomName);
             if(result !== null) {
-                setSupplementList([...supplementList, { areaId: areaId, supplements: result }])
+                setSupplementList([{ areaId: areaId, supplements: result }])
             }
         }
         selectedSymptoms.map((selectedSymptom) => {
@@ -48,8 +50,8 @@ function SupplementList() {
             fetchAPI(symptom, selectedSymptom.areaId);
         })
     }, []);
-    return isLoading ? (
-        <Loading />
+        return isLoading ? (
+            <Loading />
     ) : (
         <Container className={cx('container')}>
             <Header showBackButton={true} to={config.routes.bodymap} pageNumb={1} />
