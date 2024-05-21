@@ -54,7 +54,6 @@ function SupplementList() {
             })
         }
     }, [activeSymptoms]);
-
     return isLoading? (
         <Loading />
     ) : (

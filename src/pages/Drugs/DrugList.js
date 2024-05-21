@@ -33,7 +33,7 @@ function DrugList({ supplement }) {
                 <div className={cx('product-list')}>
                     {drugList.map((product, index) => (
                         <div key={index}>
-                            <ProductCard key={index} product={product} onClick={handleOnProductClick} />
+                            <ProductCard product={product} onClick={handleOnProductClick} />
                         </div>
                     ))}
                 </div>
