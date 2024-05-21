@@ -6,6 +6,7 @@ import Home from '~/pages/Home';
 import SupplementList from '~/pages/Supplements/SupplementList';
 import Supplement from '~/pages/Supplements/Supplement';
 import Drug from '~/pages/Drugs/Drug';
+import DrugDetail from '~/pages/Drugs/DrugDetail';
 
 // Public Routes
 const publicRoutes = [
@@ -14,6 +15,7 @@ const publicRoutes = [
     { path: config.routes.supplements, component: SupplementList },
     { path: config.routes.supplement, component: Supplement },
     { path: config.routes.drug, component: Drug },
+    { path: config.routes.drugDetail, component: DrugDetail }
 ];
 
 // Private Routes

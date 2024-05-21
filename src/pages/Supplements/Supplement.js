@@ -1,20 +1,19 @@
 import classNames from 'classnames/bind';
 import style from './Supplement.module.scss';
 
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import { useEffect, useRef, useState } from 'react';
 import { Nav, Tab, TabPane } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 import { Transition } from 'react-transition-group';
 import images from '~/assets/images';
 import InfoTag from '~/components/InfoTag';
-import { useRef, useState, useEffect } from 'react';
-import DrugList from '~/pages/Drugs/DrugList';
-import ProductLayout from '~/components/ProductLayout';
 import Uses from '~/components/InfoTag/Uses';
-import { useParams } from 'react-router-dom';
-import Interactions from '~/components/InfoTag/Interactions';
+import ProductLayout from '~/components/ProductLayout';
+import DrugList from '~/pages/Drugs/DrugList';
 import * as supplementService from '~/services/supplementService';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import * as winkjsService from '~/services/winkjsService'
+import * as winkjsService from '~/services/winkjsService';
 
 
 const cx = classNames.bind(style);
@@ -203,19 +202,19 @@ function Supplement() {
                             {supplement?.overview && (
                                 <InfoTag title="Overview" content={supplement.overview} initOpen={true} />
                             )}
+                            {supplement?.dosing && <InfoTag title="Dosing" content={supplement.dosing} />}
                             {supplement?.uses && <InfoTag title="Uses" content={supplement.uses} Component={Uses} />}
                             {supplement?.side_effects && (
                                 <InfoTag title="Side Effects" content={supplement.side_effects} />
                             )}
                             {supplement?.precautions && <InfoTag title="Precautions" content={supplement.precautions} />}
-                            {supplement?.interactions && (
+                            {/* {supplement?.interactions && (
                                 <InfoTag
                                     title="Interactions"
                                     content={supplement.interactions}
                                     Component={Interactions}
                                 />
-                            )}
-                            {supplement?.dosing && <InfoTag title="Dosing" content={supplement.dosing} />}
+                            )} */}
                         </div>
                     </Tab.Pane>
                     <TabPane eventKey={1}>
