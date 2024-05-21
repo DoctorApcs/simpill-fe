@@ -31,18 +31,20 @@ export const drugs = async (supplement, count = 5, width = '1080', quality = '90
         })
     });
     let data = await results.json();
-    return data.products.map((product) => (
-        {
-            name: slugify(product.webName, {
-                replacement: ' ',
-                locale: 'vi',
-            }),
-            image: product.image.replace('unsafe/', `unsafe/${width}x0/filters:quality(${quality})/`),
-            url: `https://${LONG_CHAU_DOMAIN}/${product.slug}`,
-            specification: product.specification,
-            price: product.price.price || product.prices.filter(price => price.measureUnitName !== 'Vỉ' || price.measureUnitName !== 'Viên')[0].price,
-        }
-    ));
+    if(data.products!==undefined) {
+        return data.products.map((product) => (
+            {
+                name: slugify(product.webName, {
+                    replacement: ' ',
+                    locale: 'vi',
+                }),
+                image: product.image.replace('unsafe/', `unsafe/${width}x0/filters:quality(${quality})/`),
+                url: `https://${LONG_CHAU_DOMAIN}/${product.slug}`,
+                specification: product.specification,
+                price: product.price.price || product.prices.filter(price => price.measureUnitName !== 'Vỉ' || price.measureUnitName !== 'Viên')[0].price,
+            }
+        ));
+    } 
 }
 
 //Use this function to get test results

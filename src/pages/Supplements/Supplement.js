@@ -1,31 +1,30 @@
 import classNames from 'classnames/bind';
 import style from './Supplement.module.scss';
 
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import { useEffect, useRef, useState } from 'react';
 import { Nav, Tab, TabPane } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 import { Transition } from 'react-transition-group';
 import images from '~/assets/images';
 import InfoTag from '~/components/InfoTag';
-import { useRef, useState, useEffect } from 'react';
-import DrugList from '~/pages/Drugs/DrugList';
-import ProductLayout from '~/components/ProductLayout';
 import Uses from '~/components/InfoTag/Uses';
-import { useParams } from 'react-router-dom';
-import Interactions from '~/components/InfoTag/Interactions';
+import ProductLayout from '~/components/ProductLayout';
+import DrugList from '~/pages/Drugs/DrugList';
 import * as supplementService from '~/services/supplementService';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import * as winkjsService from '~/services/winkjsService'
+import * as winkjsService from '~/services/winkjsService';
 
 
 const cx = classNames.bind(style);
 const switchButton = [
     {
-        eventKey: 'details',
-        name: 'Details',
-    },
-    {
         eventKey: 'drugs',
         name: 'Drugs',
+    },
+    {
+        eventKey: 'details',
+        name: 'Details',
     },
 ];
 
@@ -45,28 +44,23 @@ function Supplement() {
     const [activeId, setActiveId] = useState(0);
     const [supplement, setSupplement] = useState({});
     const [isHighlighted, setIsHighlighted] = useState(false);
+    const [originalSupplement, setOriginalSupplement] = useState({});
     const { name } = useParams();
 
     const handleSwitch = async () => {
         if (isHighlighted) {
-            const overview = winkjsService.unhightLightText(supplement.overview);
-            supplement.overview = overview;
-
-            for (let i = 0; i < supplement.uses.length; i++) {
-                const text = winkjsService.unhightLightText(supplement.uses[i].uses);
-                supplement.uses[i].uses = text;
-            }
+            supplement.overview = originalSupplement.overview;
+            supplement.uses = originalSupplement.uses;
         } else {
-            const overview = await winkjsService.highLightText(supplement.overview);
-            supplement.overview = overview;
+            supplement.overview = winkjsService.shortenText(originalSupplement.overview);
 
-            for (let i = 0; i < supplement.uses.length; i++) {
+            for (let i = 0; i < originalSupplement.uses.length; i++) {
                 const uses = extractLiValues(supplement.uses[i].uses);
-                console.log(uses);
                 const highlightedUses = [];
                 for (let j = 0; j < uses.length; j++) {
-                    const highlightedText = await winkjsService.highLightText(uses[j], 0.95);
-                    highlightedUses.push(highlightedText);
+                    // only get the first 1 sentences
+                    const firstSentence = uses[j].split('.').slice(0, 1).join('.') + '.';
+                    highlightedUses.push(firstSentence)
                 }
                 supplement.uses[i].uses = concatLiValues(highlightedUses);
             }
@@ -78,7 +72,9 @@ function Supplement() {
     useEffect(() => {
         const fetchApi = async () => {
             const supplement = await supplementService.supplement(name);
-            setSupplement(supplement);
+            setOriginalSupplement(supplement);
+            // make a deep copy of the supplement object
+            setSupplement(JSON.parse(JSON.stringify(supplement)));
         };
         if (name !== '' && name !== undefined) {
             fetchApi();
@@ -140,7 +136,7 @@ function Supplement() {
                                 active={index === activeId}
                                 eventKey={index}
                             >
-                                <Transition nodeRef={navItemTextRef} in={index === activeId} timeout={animationDelay}>
+                                <Transition nodeRef={navItemTextRef} in={activeId === index } timeout={animationDelay}>
                                     {state => (
                                         <Nav.Item ref={navItemTextRef} style={{
                                             ...navItemTextDefaultStyle,
@@ -150,7 +146,7 @@ function Supplement() {
                                 </Transition>
                             </Nav.Link>
                         ))}
-                        <Transition nodeRef={sliderRef} in={activeId} timeout={animationDelay}>
+                        <Transition nodeRef={sliderRef} in={Boolean(activeId)} timeout={animationDelay}>
                             {state => (
                                 <div
                                     ref={sliderRef}
@@ -165,7 +161,10 @@ function Supplement() {
                     </div>
                 </Nav>
                 <Tab.Content>
-                    <Tab.Pane eventKey={0}>
+                    <TabPane eventKey={0}>
+                        <DrugList supplement={supplement.name}/>
+                    </TabPane>
+                    <Tab.Pane eventKey={1}>
                         <div className={cx('content')}>
                             <FormControlLabel
                                 control={
@@ -193,7 +192,7 @@ function Supplement() {
                                         }}
                                     />
                                 }
-                                label="Highlight the key points"
+                                label="Only show the key points"
                                 sx={{
                                     '& .MuiFormControlLabel-label': {
                                         fontSize: '15px',
@@ -206,24 +205,21 @@ function Supplement() {
                             {supplement?.overview && (
                                 <InfoTag title="Overview" content={supplement.overview} initOpen={true} />
                             )}
+                            {supplement?.dosing && <InfoTag title="Dosing" content={supplement.dosing} />}
                             {supplement?.uses && <InfoTag title="Uses" content={supplement.uses} Component={Uses} />}
                             {supplement?.side_effects && (
                                 <InfoTag title="Side Effects" content={supplement.side_effects} />
                             )}
                             {supplement?.precautions && <InfoTag title="Precautions" content={supplement.precautions} />}
-                            {supplement?.interactions && (
+                            {/* {supplement?.interactions && (
                                 <InfoTag
                                     title="Interactions"
                                     content={supplement.interactions}
                                     Component={Interactions}
                                 />
-                            )}
-                            {supplement?.dosing && <InfoTag title="Dosing" content={supplement.dosing} />}
+                            )} */}
                         </div>
                     </Tab.Pane>
-                    <TabPane eventKey={1}>
-                        <DrugList supplement={supplement.name}/>
-                    </TabPane>
                 </Tab.Content>
             </Tab.Container>
         </ProductLayout>

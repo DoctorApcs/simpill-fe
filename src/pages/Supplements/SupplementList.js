@@ -11,24 +11,19 @@ import Header from '~/layouts/components/Header';
 import Loading from '../Loading';
 import { useEffect, useState } from 'react';
 import SymptomsTable from '~/components/SymptomsTable';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import * as suggestionService from '~/services/suggestionService';
 import { findAreaNameByAreaId, findSymptomListBySymptomIds } from '~/handler';
-import { useDebounce } from '~/hooks';
+import { startLoading, stopLoading } from '~/redux/loadingSlice';
 
-// Fake api data vitamins
-const fakeAPIVitamins = Array.from({ length: 5 }, (_, i) => ({
-    id: i + 1,
-    name: `Vitamin ${i + 1}`,
-}));
 const cx = classNames.bind(style);
 function SupplementList() {
     const [supplementList, setSupplementList] = useState([]);
-    const isLoading = useSelector((state) => state.loading.isLoading);
+    const [activeSymptoms, setActiveSymptoms] = useState([]);
+    const isLoading = useSelector((state) => state.loading);
     const [openTable, setOpenTable] = useState(false);
-    const selectedSymptoms = JSON.parse(sessionStorage.getItem('selectedSymptoms')).symptoms;
+    const dispatch = useDispatch();
     
-
     useEffect(() => {
         if (isLoading) {
             document.body.style.backgroundColor = 'rgb(204, 251, 241)';
@@ -37,21 +32,31 @@ function SupplementList() {
             document.body.style.backgroundColor = 'white';
         };
     }, [isLoading]);
+    
+    useEffect(() => {
+        const selectedSymptoms = JSON.parse(sessionStorage.getItem('selectedSymptoms')).symptoms;
+        setActiveSymptoms(selectedSymptoms);
+    }, [])
 
     useEffect(() => {
         const fetchAPI = async (symptomName, areaId) => {
+            dispatch(startLoading());
             const result = await suggestionService.suggestionList(symptomName);
             if(result !== null) {
                 setSupplementList([{ areaId: areaId, supplements: result }])
             }
+            dispatch(stopLoading());
         }
-        selectedSymptoms.map((selectedSymptom) => {
-            const symptom = findSymptomListBySymptomIds(selectedSymptom.symptomIds)
-            fetchAPI(symptom, selectedSymptom.areaId);
-        })
-    }, []);
-        return isLoading ? (
-            <Loading />
+        if(activeSymptoms.length > 0) {
+            activeSymptoms.map((activeSymptom) => {
+                const symptom = findSymptomListBySymptomIds(activeSymptom.symptomIds)
+                fetchAPI(symptom, activeSymptom.areaId);
+            })
+        }
+    }, [activeSymptoms]);
+
+    return isLoading? (
+        <Loading />
     ) : (
         <Container className={cx('container')}>
             <Header showBackButton={true} to={config.routes.bodymap} pageNumb={1} />
@@ -77,7 +82,7 @@ function SupplementList() {
                 </div>
                 <Collapse in={openTable} style={{ paddingTop: '20px', width: '100%' }}>
                     <div style={{ backgroundColor: 'transparent' }}>
-                        <SymptomsTable areas={selectedSymptoms} />
+                        <SymptomsTable areas={activeSymptoms} />
                     </div>
                 </Collapse>
             </Button>
@@ -131,7 +136,7 @@ function SupplementList() {
                 </div>
             </div>
         </Container>
-    );
+    )
 }
 
 export default SupplementList;

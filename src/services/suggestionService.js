@@ -3,9 +3,10 @@ import * as httpRequest from "~/utils/httpRequest";
 
 export const suggestionList = async (q='') => {
     try {
+        const query = 'effective use ' + q;
         const suggestionList = await httpRequest.get(requests.suggestions, {
             params: {
-                q,
+                q: query,
             }
         });
         return suggestionList;

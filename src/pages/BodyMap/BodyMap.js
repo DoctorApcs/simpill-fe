@@ -33,10 +33,14 @@ function BodyMap() {
     useEffect(() => {
         const fetchApi = async () => {
             const symptomList = await symptomsService.symptomList(requests.symptomList);
-            handleAPI(symptomList);
+            if(symptomList) {
+                handleAPI(symptomList);
+            }
         }
-        fetchApi();
+
+            fetchApi();
     }, []);
+
     // Get body parts and areas
     const [selectedSymptoms, setSelectedSymptoms] = useState(() => {
         // Try to get the initial state from local storage
