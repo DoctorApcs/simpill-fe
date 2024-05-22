@@ -5,7 +5,7 @@ import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Button, Nav, Offcanvas, Tab, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { findSymptomListByAreaId, findAreaNameByAreaId } from '~/handler';
+import { findSymptomListByAreaId, findAreaNameByAreaId, findSymptomListByAreaGroupId } from '~/handler';
 
 const cx = classNames.bind(style);
 const SymptomList = forwardRef(
@@ -28,11 +28,11 @@ const SymptomList = forwardRef(
         
         const [selectedKey, setSelectedKey] = useState(areaId);
         const [activeSymptomsByAreaId, setActiveSymptomsByAreaId] = useState({areaId: selectedKey, symptoms: getSelectedSymptomIdsByArea(selectedKey)});
-        const buttonRefs = useRef(findSymptomListByAreaId(areaId).reduce((acc, symptom) => {
+        const buttonRefs = useRef(findSymptomListByAreaGroupId(areaGroup.areaIds).reduce((acc, symptom) => {
             acc[symptom.id] = React.createRef();
             return acc;
         } , {}));
-        
+
         useEffect(() => {
             setActiveSymptomsByAreaId({ areaId: selectedKey, symptoms: getSelectedSymptomIdsByArea(selectedKey) })
         }, [selectedKey]);
@@ -47,11 +47,11 @@ const SymptomList = forwardRef(
             const lastActiveSymptom = activeSymptomIds[activeSymptomIds.length - 1];
             if(lastActiveSymptom) {
                 const buttonRef=buttonRefs.current[lastActiveSymptom].current
-                buttonRef.scrollIntoView({
+                buttonRef?.scrollIntoView({
                     behavior: 'smooth',
                     block: 'center',
                 });
-                buttonRef.focus({
+                buttonRef?.focus({
                     behavior: 'smooth',
                     block: 'center',
                 });

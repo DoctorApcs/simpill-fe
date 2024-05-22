@@ -43,7 +43,7 @@ function SupplementList() {
             dispatch(startLoading());
             const result = await suggestionService.suggestionList(symptomName);
             if(result !== null) {
-                setSupplementList([{ areaId: areaId, supplements: result }])
+                setSupplementList(prev => [...prev, { areaId: areaId, supplements: result }])
             }
             dispatch(stopLoading());
         }
@@ -53,6 +53,7 @@ function SupplementList() {
                 fetchAPI(symptom, activeSymptom.areaId);
             })
         }
+        console.log(supplementList);    
     }, [activeSymptoms]);
 
     return isLoading? (
@@ -80,12 +81,12 @@ function SupplementList() {
                     </div>
                     <span className={cx('caret', `${openTable ? 'caret-toggle' : ''}`)}></span>
                 </div>
+            </Button>
                 <Collapse in={openTable} style={{ paddingTop: '20px', width: '100%' }}>
                     <div style={{ backgroundColor: 'transparent' }}>
                         <SymptomsTable areas={activeSymptoms} />
                     </div>
                 </Collapse>
-            </Button>
             <div
                 style={{
                     display: 'flex',
