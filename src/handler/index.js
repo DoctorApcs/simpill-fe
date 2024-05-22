@@ -33,6 +33,14 @@ export const findSymptomListByAreaId = (areaID) => {
     return symptomList;
 };
 
+export const findSymptomListByAreaGroupId = (areaGroupIds) => {
+    const symptomList = [];
+     areaGroupIds.map((groupId) => {
+        symptomList.push(...findSymptomListByAreaId(groupId));
+    })
+    return symptomList; 
+};
+
 export const getAreaGroup = () => {
     return areaGroup;
 };
