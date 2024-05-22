@@ -1,53 +1,14 @@
 import bodyParts from '../mocks/bodyParts.json';
 import bodyAreas from '../mocks/bodyAreas.json';
 import areaGroup from '../mocks/areaGroup.json';
-import * as symptomsService from '../services/symptomsService';
-import requests from '../utils/routes';
-
-const TTL = 60*60*1000; // 1 hour
 
 const saveToSessionStorage = (key, value) => {
-    sessionStorage.setItem(key, JSON.stringify({
-        value: value,
-        expiration: Date.now() + TTL
-    }));
+    sessionStorage.setItem(key, JSON.stringify(value));
 };
 
-export const handleAPI = (symptomList) => {
-    const allSymptoms = [];
-    const symptomIdsByArea = [];
-    let symptomId = 0;
-    let areaId = 0;
-    for( const bodyArea of bodyAreas) {
-        for(const bodyPart of symptomList) {
-            if(bodyArea.name === bodyPart.bodyPart) {
-                const symptomIds = [];
-                for(const symptom of bodyPart.symptoms) {
-                    allSymptoms.push({ id: symptomId, name: symptom });
-                    symptomIds.push(symptomId);
-                    symptomId++;
-                }
-                symptomIdsByArea.push({ id: areaId, symptomIds: symptomIds });
-                areaId++;
-            }
-        }
-    }
-    saveToSessionStorage('allSymptoms', allSymptoms);
-    saveToSessionStorage('symptomIdsByArea', symptomIdsByArea);
-}
-
 const loadFromSessionStorage = (key) => {
-    let result=JSON.parse(sessionStorage.getItem(key)).value;
-    if(!result || Date.now() > result.expiration) {
-        const fetchApi = async () => {
-            const symptomList = await symptomsService.symptomList(requests.symptomList);
-            if(symptomList) {
-                console.log(symptomList);
-                handleAPI(symptomList);
-            }
-        }
-        fetchApi();
-    }
+    return JSON.parse(sessionStorage.getItem(key));
+
 }
 
 export const getBodyParts = () => {
@@ -124,3 +85,25 @@ export const findAreaIdByBodyPartId = (bodyPartId) => {
     return -1;
 };
 
+export const handleAPI = (symptomList) => {
+    const allSymptoms = [];
+    const symptomIdsByArea = [];
+    let symptomId = 0;
+    let areaId = 0;
+    for( const bodyArea of bodyAreas) {
+        for(const bodyPart of symptomList) {
+            if(bodyArea.name === bodyPart.bodyPart) {
+                const symptomIds = [];
+                for(const symptom of bodyPart.symptoms) {
+                    allSymptoms.push({ id: symptomId, name: symptom });
+                    symptomIds.push(symptomId);
+                    symptomId++;
+                }
+                symptomIdsByArea.push({ id: areaId, symptomIds: symptomIds });
+                areaId++;
+            }
+        }
+    }
+    saveToSessionStorage('allSymptoms', allSymptoms);
+    saveToSessionStorage('symptomIdsByArea', symptomIdsByArea);
+}
