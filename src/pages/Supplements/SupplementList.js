@@ -3,6 +3,7 @@ import style from './SupplementList.module.scss';
 
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ButtonBase as ResultButton } from '@mui/material';
 import { Button, Collapse, Container, Image } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import images from '~/assets/images';
@@ -98,7 +99,7 @@ function SupplementList() {
                             <h5 style={{ fontWeight: 800, fontSize: '16px' }}>Results for {findAreaNameByAreaId(supplements.areaId)}</h5>
                             {supplements.supplements.map((supplement, index) => (
                                 <NavLink to={`${config.routes.supplement.replace(':name', supplement.name.toLowerCase())}`} key={index}>
-                                    <Button
+                                    <ResultButton
                                         key={index}
                                         style={{
                                             display: 'flex',
@@ -126,7 +127,7 @@ function SupplementList() {
                                             {supplement.name}
                                         </div>
                                         <FontAwesomeIcon icon={faAngleRight} style={{ float: 'right' }} />
-                                    </Button>
+                                    </ResultButton>
                                 </NavLink>
                             ))}
                         </div>

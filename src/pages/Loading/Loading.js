@@ -1,3 +1,4 @@
+import LinearProgress from '@mui/material/LinearProgress';
 import classNames from 'classnames/bind';
 import style from './Loading.module.scss';
 
@@ -12,6 +13,20 @@ function Loading() {
                 <p style={{ fontSize: '18px', padding: '0 20px', textAlign: 'center' }}>
                     Please wait... We’re calculating the data based on your asessment.
                 </p>
+            </div>
+            <div style={{
+                border: '4px solid', 
+                width: 'fit-content',
+                borderRadius: '24px',
+                padding: '4px',
+            }}>
+                <LinearProgress sx={{
+                    background: 'linear-gradient(to right, #45EBA5, #163A5F)',
+                    '> span': { backgroundColor: 'rgba(0, 0, 0, 0.15)' },
+                    borderRadius: '16px',
+                    height: '32px',
+                    width: '128px'
+                }}/>
             </div>
         </div>
     );
