@@ -51,12 +51,12 @@ function Supplement() {
     const handleSwitch = async () => {
         if (isHighlighted) {
             supplement.overview = originalSupplement.overview;
-            supplement.uses = originalSupplement.uses;
+            supplement.uses = JSON.parse(JSON.stringify(originalSupplement.uses));
         } else {
             supplement.overview = winkjsService.shortenText(originalSupplement.overview);
 
             for (let i = 0; i < originalSupplement.uses.length; i++) {
-                const uses = extractLiValues(supplement.uses[i].uses);
+                const uses = extractLiValues(originalSupplement.uses[i].uses);
                 const highlightedUses = [];
                 for (let j = 0; j < uses.length; j++) {
                     // only get the first 1 sentences
