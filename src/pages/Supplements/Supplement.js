@@ -46,6 +46,7 @@ function Supplement() {
     const [isHighlighted, setIsHighlighted] = useState(false);
     const [originalSupplement, setOriginalSupplement] = useState({});
     const { name } = useParams();
+    const switchRef = useRef(null);
 
     const handleSwitch = async () => {
         if (isHighlighted) {
@@ -70,6 +71,7 @@ function Supplement() {
     };
 
     useEffect(() => {
+        switchRef.current.checked = isHighlighted;
         const fetchApi = async () => {
             const supplement = await supplementService.supplement(name);
             setOriginalSupplement(supplement);
@@ -169,6 +171,7 @@ function Supplement() {
                             <FormControlLabel
                                 control={
                                     <Switch
+                                        ref={switchRef}
                                         checked={isHighlighted}
                                         onChange={handleSwitch}
                                         sx={{
@@ -218,6 +221,7 @@ function Supplement() {
                                     Component={Interactions}
                                 />
                             )} */}
+                            <div style={{ padding: '0 0 100px 0' }}/>
                         </div>
                     </Tab.Pane>
                 </Tab.Content>

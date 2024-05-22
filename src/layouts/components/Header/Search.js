@@ -56,7 +56,7 @@ function Search({ showSearchBox, setShowSearchBox }) {
             placement="top"
             show={showSearchBox}
             onHide={handleClose}
-            style={{ height: '60vh' }}
+            style={{ height: '60vh', borderRadius: '0 0 16px 16px' }}
             onEnter={handleFocusInput}
         >
             <div className={cx('wrapper')}>
