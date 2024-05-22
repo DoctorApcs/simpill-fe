@@ -4,7 +4,7 @@ import style from './SupplementList.module.scss';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ButtonBase as ResultButton } from '@mui/material';
-import { Button, Collapse, Container, Image } from 'react-bootstrap';
+import { Button, Collapse, Container, Dropdown, DropdownButton, Image } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import images from '~/assets/images';
 import config from '~/config';
@@ -20,6 +20,8 @@ import { startLoading, stopLoading } from '~/redux/loadingSlice';
 const cx = classNames.bind(style);
 function SupplementList() {
     const [supplementList, setSupplementList] = useState([]);
+    const [supplementListFilter, setSupplementListFilter] = useState([]);
+    const [filterAreaId, setFilterAreaId] = useState(-1)
     const [activeSymptoms, setActiveSymptoms] = useState([]);
     const isLoading = useSelector((state) => state.loading);
     const [openTable, setOpenTable] = useState(false);
@@ -39,6 +41,19 @@ function SupplementList() {
         setActiveSymptoms(selectedSymptoms);
     }, [])
 
+    const getSymptomsListByAreaId = (filterAreaId) => {
+        if(filterAreaId === -1) return supplementList;
+        return supplementList.filter((supplement) => supplement.areaId === filterAreaId)
+    }
+
+    useEffect(() => {
+        setSupplementListFilter(getSymptomsListByAreaId(filterAreaId));
+    }, [supplementList, filterAreaId])
+
+    const handleFilter = (k) => {
+        setFilterAreaId(Number(k));
+    }
+
     useEffect(() => {
         const fetchAPI = async (symptomName, areaId) => {
             dispatch(startLoading());
@@ -54,8 +69,12 @@ function SupplementList() {
                 fetchAPI(symptom, activeSymptom.areaId);
             })
         }
-        console.log(supplementList);    
+        return () => {
+            dispatch(stopLoading());
+            setSupplementList([]);
+        }
     }, [activeSymptoms]);
+
     return isLoading? (
         <Loading />
     ) : (
@@ -82,11 +101,11 @@ function SupplementList() {
                     <span className={cx('caret', `${openTable ? 'caret-toggle' : ''}`)}></span>
                 </div>
             </Button>
-                <Collapse in={openTable} style={{ paddingTop: '20px', width: '100%' }}>
-                    <div style={{ backgroundColor: 'transparent' }}>
-                        <SymptomsTable areas={activeSymptoms} />
-                    </div>
-                </Collapse>
+            <Collapse in={openTable} style={{ paddingTop: '20px', width: '100%' }}>
+                <div style={{ backgroundColor: 'transparent' }}>
+                    <SymptomsTable areas={activeSymptoms} />
+                </div>
+            </Collapse>
             <div
                 style={{
                     display: 'flex',
@@ -94,10 +113,16 @@ function SupplementList() {
                     width: '100%',
                 }}
             >
-                <div className={cx('vitamin-list')}>
+                <DropdownButton bsPrefix={cx('filter')} title={filterAreaId===-1 ? "Selected All" : findAreaNameByAreaId(filterAreaId)} onSelect={(k) => handleFilter(k)}>
+                    <Dropdown.Item eventKey='-1' bsPrefix={cx('filter-item')}>Selected All</Dropdown.Item>
                     {supplementList.map((supplements, index) => (
+                            <Dropdown.Item key={index} eventKey={supplements.areaId} bsPrefix={cx('filter-item')}>{findAreaNameByAreaId(supplements.areaId)}</Dropdown.Item>
+                    ))}
+                </DropdownButton>
+                <div className={cx('vitamin-list')}>
+                    {supplementListFilter.map((supplements, index) => (
                         <div className={cx('vitamin-list')} key={index}>
-                            <h5 style={{ fontWeight: 800, fontSize: '16px' }}>Results for {findAreaNameByAreaId(supplements.areaId)}</h5>
+                            {filterAreaId===-1 && <h5 style={{ fontWeight: 800, fontSize: '16px' }}>Results for {findAreaNameByAreaId(supplements.areaId)}</h5> }
                             {supplements.supplements.map((supplement, index) => (
                                 <NavLink to={`${config.routes.supplement.replace(':name', supplement.name.toLowerCase())}`} key={index}>
                                     <ResultButton
