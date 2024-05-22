@@ -139,6 +139,11 @@ function BodyMap() {
         }
     }, [showSymptomList]);
 
+    const handleClearAll = () => {
+        setSelectedSymptoms([]);
+        setAreaIdxList([]);
+    }
+
     return (
         <Container className="d-inline-flex flex-column justify-content-center" style={{ gap: '20px' }}>
             <Header pageNumb={0} />
@@ -147,6 +152,9 @@ function BodyMap() {
                 <p className={cx('instruction')}>Select a body part where you are experiencing symptoms.</p>
             </div>
             <div className={cx('body')}>
+                <div className={cx('clear-btn')}>
+                    <Button onClick={handleClearAll} disabled={selectedSymptoms.length===0} style={selectedSymptoms.length===0 ? {backgroundColor: '#1e293b', opacity: '0.5'} : {backgroundColor: ''}} bsPrefix={cx('clear-btn-item')}>Clear All</Button>
+                </div>
                 <BodyContainer>
                     {antBodyParts.map((bodyPart, index) => (
                         <BodyPart
