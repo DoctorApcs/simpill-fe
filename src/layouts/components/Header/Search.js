@@ -3,7 +3,8 @@ import style from './Search.module.scss';
 import { faAngleRight, faClose, faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useRef, useState } from 'react';
-import { Button, Offcanvas } from 'react-bootstrap';
+import { Offcanvas } from 'react-bootstrap';
+import { ButtonBase as MaterialButton } from '@mui/material';
 import * as searchService from '~/services/searchService';
 import { useDebounce } from '~/hooks';
 import { NavLink } from 'react-router-dom';
@@ -81,7 +82,7 @@ function Search({ showSearchBox, setShowSearchBox }) {
                         )} 
                         {loading && <FontAwesomeIcon className={cx('loading-icon')} icon={faSpinner} />}
                     </div>
-                    <Button
+                    <MaterialButton
                         onClick={handleClose}
                         style={{
                             color: '#14b8a6',
@@ -89,15 +90,18 @@ function Search({ showSearchBox, setShowSearchBox }) {
                             fontWeight: 800,
                             backgroundColor: 'transparent',
                             border: 'none',
+                            height: '100%',
+                            paddingInline: '6px',
+                            borderRadius: '16px'
                         }}
                     >
                         Cancel
-                    </Button>
+                    </MaterialButton>
                 </div>
                 <div className={cx('search-result')}> 
                     {searchResult.map((vitamin, index) => (
                         <NavLink onClick={handleClose} to={`${config.routes.supplement.replace(':name', vitamin.name.toLowerCase())}`} key={index}>
-                            <Button
+                            <MaterialButton
                                 key={index}
                                 style={{
                                     display: 'flex',
@@ -124,7 +128,7 @@ function Search({ showSearchBox, setShowSearchBox }) {
                                     {vitamin.name}
                                 </div>
                                 <FontAwesomeIcon icon={faAngleRight} style={{ float: 'right' }} />
-                            </Button>
+                            </MaterialButton>
                         </NavLink>
                     ))}
                 </div>

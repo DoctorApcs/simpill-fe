@@ -3,7 +3,7 @@ import style from './Header.module.scss';
 
 import { faAngleLeft, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button } from 'react-bootstrap';
+import { ButtonBase as Button } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import config from '~/config';
 import { useEffect, useState } from 'react';
