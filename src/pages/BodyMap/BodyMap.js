@@ -8,12 +8,11 @@ import { Button, Container } from 'react-bootstrap';
 import SymptomList from './SymptomList';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { getBodyAreas, getBodyParts, findAreaGroupByAreaId, findAreaIdByBodyPartId } from '~/handler';
+import {  getBodyParts, findAreaGroupByAreaId, findAreaIdByBodyPartId, handleAPI, getBodyAreas } from '~/handler';
 import Header from '~/layouts/components/Header';
 import { NavLink } from 'react-router-dom';
 import config from '~/config';
 import * as symptomsService from '~/services/symptomsService';
-import * as supplementService from '~/services/supplementService';
 import requests from '~/utils/routes';
 
 const cx = classNames.bind(style);
@@ -31,9 +30,40 @@ function BodyMap() {
 
     // state for active symptoms list
     const [areaIdxList, setAreaIdxList] = useState([]);
-    const [selectedSymptoms, setSelectedSymptoms] = useState([]);
+    useEffect(() => {
+        const fetchApi = async () => {
+            const symptomList = await symptomsService.symptomList(requests.symptomList);
+            if(symptomList) {
+                handleAPI(symptomList);
+            }
+        }
+
+            fetchApi();
+    }, []);
 
     // Get body parts and areas
+    const [selectedSymptoms, setSelectedSymptoms] = useState(() => {
+        // Try to get the initial state from local storage
+        const storedData = sessionStorage.getItem('selectedSymptoms');
+        if (storedData) {
+            const { timestamp, symptoms } = JSON.parse(storedData);
+            const oneHour = 60*60*1000; // in milliseconds
+            const isExpired = Date.now() - timestamp > oneHour;
+            if (!isExpired) {
+                return symptoms;
+            }
+        }
+        return [];
+    })
+    // Save selected symptoms to local storage
+    useEffect(() => {
+        const data = {
+            timestamp: Date.now(), // Store a timestamp
+            symptoms: selectedSymptoms,
+        };
+        sessionStorage.setItem('selectedSymptoms', JSON.stringify(data));
+    }, [selectedSymptoms]);
+
     const antBodyParts = useMemo(() => {
         return getBodyParts().filter(({ face }) => face === 'ant');
     }, []);
@@ -49,6 +79,7 @@ function BodyMap() {
         }
         setAreaIdxList(selectedAreaIdxList);
     }, [selectedSymptoms]);
+    
 
     const getFill = useCallback(
         (bodyPartId) => {
@@ -85,7 +116,6 @@ function BodyMap() {
     // Set area index when clicked or hovered
     useEffect(() => {
         const areaIndex = findAreaIdByBodyPartId(clicked);
-        console.log(areaIndex);
         setAreaIdx(areaIndex);
         bodyAreaButtonsRef.current.children[areaIndex]?.scrollIntoView({
             behaivor: 'smooth',
@@ -109,18 +139,6 @@ function BodyMap() {
         }
     }, [showSymptomList]);
 
-    useEffect(() => {
-        const fetchApi = async () => {
-            const symptomList = await symptomsService.symptomList(requests.symptomList);
-            console.log(symptomList);
-        }
-        const fetchApi1 = async () => {
-            const supplement = await supplementService.supplement('vitamin a');
-            console.log(supplement);
-        }
-        fetchApi1();
-        fetchApi();
-    }, []);
     return (
         <Container className="d-inline-flex flex-column justify-content-center" style={{ gap: '20px' }}>
             <Header pageNumb={0} />

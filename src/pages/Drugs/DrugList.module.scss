@@ -1,0 +1,27 @@
+.product-list {
+    display: flex;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 12px;
+}
+.product-list::-webkit-scrollbar {
+    display: none;
+}
+
+.product-item{
+    background-color: #f1f5f9;
+    border-radius: 16px;
+}
+
+.load-more{
+    text-align: center;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--white);
+    background-color: var(--primary);
+    border-radius: 16px;
+    padding: 8px;
+    margin: 10px;
+}

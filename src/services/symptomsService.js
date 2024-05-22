@@ -1,7 +1,7 @@
 import requests from "~/utils/routes";
 import * as httpRequest from "../utils/httpRequest";
 
-const TTL=0; // 1 hour
+const TTL=60*60*1000; // 1 hour
 
 export const symptomList = async () => {
     let symptomListLocal=JSON.parse(sessionStorage.getItem("symptomList"));

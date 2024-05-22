@@ -3,9 +3,9 @@
     { "id": 1, "name": "Skin", "bodyPartIds": [] },
     { "id": 2, "name": "Head and Neck", "bodyPartIds": [10, 19, 30] },
     { "id": 3, "name": "Eyes", "bodyPartIds": [10, 19, 30] },
-    { "id": 4, "name": "Ears, Nose, Throat", "bodyPartIds": [10, 19, 30] },
-    { "id": 5, "name": "Check and Back", "bodyPartIds": [0, 12, 20, 32] },
+    { "id": 4, "name": "Ear, Nose, Throat", "bodyPartIds": [10, 19, 30] },
+    { "id": 5, "name": "Chest and Back", "bodyPartIds": [0, 12, 20, 32] },
     { "id": 6, "name": "Arms and Hands", "bodyPartIds": [2, 3, 5, 6, 17, 18, 22, 23, 25, 26, 37, 38] },
     { "id": 7, "name": "Abdomen and Pelvis", "bodyPartIds": [1, 4, 9, 21, 24, 29] },
-    { "id": 8, "name": "Legs and Feets", "bodyPartIds": [7, 8, 11, 13, 14, 15, 16, 27, 28, 31, 33, 34, 35, 36] }
+    { "id": 8, "name": "Legs and Feet", "bodyPartIds": [7, 8, 11, 13, 14, 15, 16, 27, 28, 31, 33, 34, 35, 36] }
 ]

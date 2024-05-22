@@ -44,8 +44,7 @@ function Search({ showSearchBox, setShowSearchBox }) {
         const fetchAPI = async () => {
             setLoading(true);
             const result = await searchService.search(searchValue);
-            const filteredResult = result.filter((item) => item.name.toLowerCase().slice(0, searchValue.length) === searchValue.toLowerCase());
-            setSearchResult(filteredResult);
+            setSearchResult(result);
             setLoading(false);
         }
         fetchAPI();
@@ -97,7 +96,7 @@ function Search({ showSearchBox, setShowSearchBox }) {
                 </div>
                 <div className={cx('search-result')}> 
                     {searchResult.map((vitamin, index) => (
-                        <NavLink to={`${config.routes.supplement}${vitamin.name.toLowerCase()}`} key={index}>
+                        <NavLink onClick={handleClose} to={`${config.routes.supplement.replace(':name', vitamin.name.toLowerCase())}`} key={index}>
                             <Button
                                 key={index}
                                 style={{

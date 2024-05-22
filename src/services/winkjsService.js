@@ -26,10 +26,12 @@ const reaplyHtmlTags = (text, tags) => {
     return txt.replace(/\(\d+\)/g, () => tags.shift());
 }
 
-export const highLightText = async (text, threshold=0.8) => {
+export const highLightText = async (text, threshold=0.5) => {
     const { textWithPlaceholders, tags } = replaceHtmlTagsWithPlaceholders(text);
     const doc = await nlp.readDoc(textWithPlaceholders);
     const sentenceWeights = await doc.out(nlp.its.sentenceWiseImportance);
+
+    console.log(sentenceWeights);
     
     // filter out sentences with importance less than threshold
     const filteredIndices = sentenceWeights
@@ -47,4 +49,25 @@ export const highLightText = async (text, threshold=0.8) => {
 export const unhightLightText = (text) => {
     // remove the markup
     return text.replace(/<mark>/g, '').replace(/<\/mark>/g, '');
+}
+
+export const removeHtmlTags = (text) => {
+    return text.replace(/<\/?[^>]+(>|$)/g, '');
+}
+
+export const shortenText = (text, threshold=0.5) => {
+    // remove all html tags
+    const cleanText = removeHtmlTags(text);
+    const doc = nlp.readDoc(cleanText);
+    
+    // get the importance of the whole text
+    const sentenceWeights = doc.out(nlp.its.sentenceWiseImportance);
+    const filteredIndices = sentenceWeights
+    .filter(sentence => sentence.importance > threshold)
+    .map(sentence => sentence.index);
+    
+    const sentences = doc.sentences();
+    const selectedSentences = filteredIndices.map(index => sentences.itemAt(Number(index)).out(nlp.its.text));
+    
+    return `<ul>${selectedSentences.map(sentence => `<li>${sentence}</li>`).join('')}</ul>`;
 }

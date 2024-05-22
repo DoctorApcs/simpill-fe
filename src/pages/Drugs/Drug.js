@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import style from './FruitDrug.module.scss';
+import style from './Drug.module.scss';
 
 import { Card, Table } from 'react-bootstrap';
 import ProductLayout from '~/components/ProductLayout';
@@ -25,7 +25,7 @@ const fakeProduct = {
 };
 
 const cx = classNames.bind(style);
-function FruitDrug() {
+function Drug() {
     const [isExpanded, setIsExpanded] = useState(false);
     // Add the keys to the selectedKeys array
 
@@ -86,4 +86,4 @@ function FruitDrug() {
     );
 }
 
-export default FruitDrug;
+export default Drug;

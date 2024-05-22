@@ -1,7 +1,7 @@
 import classNames from 'classnames/bind';
 import style from './SymptomList.module.scss';
 
-import { forwardRef, useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Button, Nav, Offcanvas, Tab, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
@@ -28,8 +28,10 @@ const SymptomList = forwardRef(
         
         const [selectedKey, setSelectedKey] = useState(areaId);
         const [activeSymptomsByAreaId, setActiveSymptomsByAreaId] = useState({areaId: selectedKey, symptoms: getSelectedSymptomIdsByArea(selectedKey)});
-        const buttonGroupRef = useRef(null);
-        
+        const buttonRefs = useRef(findSymptomListByAreaId(areaId).reduce((acc, symptom) => {
+            acc[symptom.id] = React.createRef();
+            return acc;
+        } , {}));
         
         useEffect(() => {
             setActiveSymptomsByAreaId({ areaId: selectedKey, symptoms: getSelectedSymptomIdsByArea(selectedKey) })
@@ -43,10 +45,17 @@ const SymptomList = forwardRef(
         const handleActiveSymptomList = (activeSymptomIds) => {
             setActiveSymptomsByAreaId({areaId:selectedKey, symptoms: [...activeSymptomIds]});
             const lastActiveSymptom = activeSymptomIds[activeSymptomIds.length - 1];
-            buttonGroupRef.current.children[(lastActiveSymptom - 1) * 2 + 1]?.scrollIntoView({
-                behavior: 'auto',
-                block: 'center',
-            });
+            if(lastActiveSymptom) {
+                const buttonRef=buttonRefs.current[lastActiveSymptom].current
+                buttonRef.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                });
+                buttonRef.focus({
+                    behavior: 'smooth',
+                    block: 'center',
+                });
+            }
         };
 
         const handleClose = () => {
@@ -66,7 +75,7 @@ const SymptomList = forwardRef(
                         if (activeSymptomsByAreaId.symptoms.length === 0) {
                             prev.splice(i, 1);
                         } else {
-                            prev[i] = { areaId: selectedKey, symptoms: activeSymptomsByAreaId.symptoms };
+                            prev[i] = { areaId: selectedKey, symptomIds: activeSymptomsByAreaId.symptoms };
                         }
                         return [...prev];
                     });
@@ -104,17 +113,17 @@ const SymptomList = forwardRef(
                     <Offcanvas.Body style={{ overflow: 'scroll' }}>
                         <Tab.Content>
                             {areaGroup.areaIds.map((areaId, index) => (
-                                <Tab.Pane key={index} eventKey={areaId}>
+                                <Tab.Pane  key={index} eventKey={areaId}>
                                     <ToggleButtonGroup
                                         type="checkbox"
                                         value={activeSymptomsByAreaId.symptoms}
                                         onChange={handleActiveSymptomList}
                                         bsPrefix={cx('symptom-list')}
-                                        ref={buttonGroupRef}
                                     >
                                         {findSymptomListByAreaId(areaId).map((symptom, symptomIndex) => (
                                             <ToggleButton
                                                 key={symptomIndex}
+                                                ref={buttonRefs.current[symptom.id]}
                                                 style={{
                                                     backgroundColor: activeSymptomsByAreaId.symptoms.includes(symptom.id)
                                                         ? '#14b8a6'

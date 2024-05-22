@@ -18,13 +18,9 @@ const breadcrumb = [
     {
         name: 'Supplements',
         to: config.routes.supplements,
-    },
-    {
-        name: '',
-        to: config.routes.supplement,
-    },
+    }
 ];
-function Header({ showBackButton, to, pageNumb, breadCrumbName = '' }) {
+function Header({ showBackButton, pageNumb, breadCrumbName = '' }) {
     const [isScroll, setIsScroll] = useState(false);
     const [showSearchBox, setShowSearchBox] = useState(false);
 
@@ -43,6 +39,7 @@ function Header({ showBackButton, to, pageNumb, breadCrumbName = '' }) {
             <div className={cx('container')}>
                 {showBackButton && (
                     <Button
+                        bsPrefix={cx('back-button')}
                         style={{
                             padding: '12px 18px',
                             borderRadius: '14px',
@@ -57,11 +54,17 @@ function Header({ showBackButton, to, pageNumb, breadCrumbName = '' }) {
                     </Button>
                 )}
                 <div className={cx('breadcrumb')}>
-                    {breadcrumb.slice(0, pageNumb + 1).map((item, index) => (
-                        <NavLink key={index} to={item.to} className={cx('breadcrumb-item')}>
-                            {item.name ? item.name : breadCrumbName}
-                        </NavLink>
-                    ))}
+                    {breadCrumbName ? (
+                        <div  className={cx('breadcrumb-item')}>
+                            {breadCrumbName}
+                        </div>
+                    ) : (
+                        breadcrumb.slice(0, pageNumb + 1).map((item, index) => (
+                            <NavLink key={index} to={item.to} className={cx('breadcrumb-item')}>
+                                {item.name}
+                            </NavLink>
+                        ))
+                    )}
                 </div>
                 <Button
                     style={{
