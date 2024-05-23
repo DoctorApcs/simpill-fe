@@ -46,14 +46,14 @@ function Loading() {
                 </div>
             </div>
             <div style={{
-                border: '4px solid', 
+                border: '4px solid #575757', 
                 width: 'fit-content',
                 borderRadius: '24px',
                 padding: '4px',
             }}>
                 <LinearProgress sx={{
-                    background: 'linear-gradient(to right, #45EBA5, #163A5F)',
-                    '> span': { backgroundColor: 'rgba(0, 0, 0, 0.15)' },
+                    background: 'linear-gradient(to right, #45EBA5, #7b8782)',
+                    '> span': { backgroundColor: 'rgba(128, 128, 128, 0.15)' },
                     borderRadius: '16px',
                     height: '32px',
                     width: '128px'
