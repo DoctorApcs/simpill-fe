@@ -47,11 +47,6 @@ Before you begin, ensure you have met the following requirements:
 2. View the list of recommended supplements and drugs displayed based on the symptoms provided.
 3. Click on any recommendation to see detailed information, including usage guidelines and potential side effects.
 
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
 ## Contact
 
 If you have any questions or suggestions, please feel free to reach out:
