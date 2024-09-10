@@ -16,7 +16,7 @@ function Home() {
             <Card.Body>
                 <p className={cx('title')}>Welcome to Simpill</p>
             </Card.Body>
-            <NavLink className={cx('intro-link')} to={config.routes.bodymap}>
+            <NavLink className={cx('intro-link')} to={config.routes.tabs}>
                 <Button bsPrefix={cx('intro-button')}>Get Started</Button>
             </NavLink>
         </div>
