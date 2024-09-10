@@ -1,5 +1,6 @@
 const routes = {
     home: '/',
+    tabs: '/tabs',
     bodymap: '/bodymap',
     supplements: '/supplements',
     supplement: '/supplements/:name',
