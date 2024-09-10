@@ -1,14 +1,23 @@
 import { useState, useRef } from 'react';
+import { NavLink } from 'react-router-dom';
+import config from '~/config';
 
-const Tab = ({ icon, title, description }) => (
-  <div className="flex flex-col items-center p-4 bg-white rounded-lg shadow-md">
-    <img src={icon} alt={title} className="w-24 h-24 mb-4" />
-    <h2 className="text-xl font-bold mb-2">{title}</h2>
-    <p className="text-sm text-gray-600 text-center">{description}</p>
-    <div className="flex mt-4">
-      <button className="mx-2 px-4 py-2 bg-gray-800 text-white rounded-md">←</button>
-      <button className="mx-2 px-4 py-2 bg-gray-800 text-white rounded-md">→</button>
-    </div>
+const Tab = ({ icon, title, description, buttonText, buttonLink }) => (
+  <div className="flex-1 flex flex-col items-center justify-center px-6 space-y-6">
+    <img
+      src={icon}
+      alt={title}
+      className="rounded-lg object-scale-down w-full h-auto max-w-[300px] max-h-[300px]"
+    />
+    <h1 className="text-4xl font-bold text-center">{title}</h1>
+    <p className="text-center text-gray-600">{description}</p>
+    <NavLink to={buttonLink}>
+      <button 
+        className="p-4 bg-custom-primary text-white rounded-full"
+      >
+        {buttonText}
+      </button>
+    </NavLink>
   </div>
 );
 
@@ -18,14 +27,18 @@ export default function Tabs() {
 
   const tabs = [
     {
-      icon: "https://placehold.co/100x100?text=👩‍⚕️",
-      title: "Hassle-Free Virtual Doctor Consultation",
-      description: "Connect hassle-free with virtual doctor consultations for personalized advice."
+      icon: "./doctor_ai.png",
+      title: "Doctor AI Companion",
+      description: "Meet your personal Medical AI Companion, delivering personalized care.",
+      buttonText: "Talk to Doctor AI",
+      buttonLink: config.routes.bodymap
     },
     {
-      icon: "https://placehold.co/100x100?text=🦠",
+      icon: "./symptom.png",
       title: "AI-Powered Symptom Checker",
-      description: "Quickly assess your health with our AI-powered symptom checker."
+      description: "Quickly assess your health with our AI-powered symptom checker.",
+      buttonText: "Check my symptoms now!",
+      buttonLink: config.routes.bodymap
     }
   ];
 
@@ -50,44 +63,20 @@ export default function Tabs() {
     touchStartX.current = null;
   };
 
-  const handlePrevTab = () => {
-    if (activeTab > 0) setActiveTab(activeTab - 1);
-  };
-
-  const handleNextTab = () => {
-    if (activeTab < tabs.length - 1) setActiveTab(activeTab + 1);
-  };
-
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full ">
+    <div className="flex flex-col h-full w-full">
+      <div className="h-2 bg-gray-300 w-3/4 mx-auto rounded-full">
+        <div 
+          className="h-full bg-black transition-all duration-300 ease-in-out rounded-full"
+          style={{ width: `${((activeTab + 1) / tabs.length) * 100}%` }}
+        />
+      </div>
       <div 
-        className="w-full max-w-md"
+        className="flex-1 mt-10"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="mb-4 bg-gray-200 h-2 rounded-full">
-          <div 
-            className="bg-purple-500 h-2 rounded-full transition-all duration-300 ease-in-out"
-            style={{ width: `${((activeTab + 1) / tabs.length) * 100}%` }}
-          ></div>
-        </div>
         <Tab {...tabs[activeTab]} />
-      </div>
-      <div className="mt-4 flex justify-center">
-        <button 
-          onClick={handlePrevTab} 
-          disabled={activeTab === 0}
-          className="mx-2 px-4 py-2 bg-purple-600 text-white rounded-md disabled:opacity-50"
-        >
-          Previous
-        </button>
-        <button 
-          onClick={handleNextTab} 
-          disabled={activeTab === tabs.length - 1}
-          className="mx-2 px-4 py-2 bg-purple-600 text-white rounded-md disabled:opacity-50"
-        >
-          Next
-        </button>
       </div>
     </div>
   );
